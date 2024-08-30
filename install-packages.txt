@@ -1,0 +1,15 @@
+sddm
+hyprland
+waybar
+nautilus
+pavucontrol
+rofi-wayland
+kitty
+neovim
+wlogout
+gnome-software
+git
+cmake
+gcc
+fzf
+

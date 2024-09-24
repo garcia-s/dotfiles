@@ -11,7 +11,7 @@ window {
 
 button {
     color: white;
-    background-color: #497E76;
+    background-color: rgba(73, 126, 118, 0.5);
     outline-style: none;
     border: none;
     border-width: 0px;

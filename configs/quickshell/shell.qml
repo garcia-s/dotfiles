@@ -5,17 +5,15 @@ import QtQuick
 ShellRoot {
     id: shellRoot
 
-    // Track which bar to use as anchor for popups (set by first bar that completes)
+    // The bar whose button was last clicked (or first bar as default for IPC)
     property var primaryBar: null
+    property var activeBar: null
 
-    // True while any panel is open — drives the dismiss overlay
     property bool anyPanelOpen: appMenu.visible || powerMenu.visible ||
                                  calendarPopup.visible || cpuDetails.visible ||
                                  ramDetails.visible
 
     // ── Dismiss overlays (one per screen, created first for z-ordering) ──
-    // Sits below the bar on each screen; intercepts clicks outside a popup
-    // and closes everything.
     Variants {
         model: Quickshell.screens
         delegate: PanelWindow {
@@ -40,49 +38,68 @@ ShellRoot {
             required property var modelData
             screen: modelData
 
-            // First bar to complete becomes the popup anchor
             Component.onCompleted: {
-                if (shellRoot.primaryBar === null) shellRoot.primaryBar = this
+                // First bar becomes the default for IPC keybinds
+                if (shellRoot.primaryBar === null) {
+                    shellRoot.primaryBar = this
+                    shellRoot.activeBar  = this
+                }
 
-                // Wire each bar's toggle signals to the shared popup set
-                toggleAppMenuRequested.connect(    function() { shellRoot.exclusive(appMenu) })
-                togglePowerMenuRequested.connect(  function() { shellRoot.exclusive(powerMenu) })
-                toggleCalendarRequested.connect(   function() { shellRoot.exclusive(calendarPopup) })
-                toggleCpuDetailsRequested.connect( function() { shellRoot.exclusive(cpuDetails) })
-                toggleRamDetailsRequested.connect( function() { shellRoot.exclusive(ramDetails) })
+                const bar = this
+                toggleAppMenuRequested.connect(function() {
+                    shellRoot.activeBar = bar
+                    appMenu.screen = bar.screen
+                    shellRoot.exclusive(appMenu)
+                })
+                togglePowerMenuRequested.connect(function() {
+                    shellRoot.activeBar = bar
+                    shellRoot.exclusive(powerMenu)
+                })
+                toggleCalendarRequested.connect(function() {
+                    shellRoot.activeBar = bar
+                    shellRoot.exclusive(calendarPopup)
+                })
+                toggleCpuDetailsRequested.connect(function() {
+                    shellRoot.activeBar = bar
+                    shellRoot.exclusive(cpuDetails)
+                })
+                toggleRamDetailsRequested.connect(function() {
+                    shellRoot.activeBar = bar
+                    shellRoot.exclusive(ramDetails)
+                })
             }
         }
     }
 
-    // ── AppMenu — PanelWindow, self-positioned below the bar's left edge ─
+    // ── AppMenu — PanelWindow, screen set dynamically on open ────────────
     AppMenu { id: appMenu }
 
-    // ── Remaining popups (PopupWindow, anchored to primary bar) ──────────
+    // ── Remaining popups — anchored to whichever bar was last clicked ─────
 
     PowerMenu {
         id: powerMenu
-        anchor.item: shellRoot.primaryBar ? shellRoot.primaryBar.powerMenuButtonRef : null
+        anchor.item: shellRoot.activeBar ? shellRoot.activeBar.powerMenuButtonRef : null
         anchor.edges: Edges.Bottom | Edges.Left
         anchor.gravity: Edges.Bottom | Edges.Right
     }
 
     CalendarPopup {
         id: calendarPopup
-        anchor.item: shellRoot.primaryBar ? shellRoot.primaryBar.clockRef : null
+        anchor.item: shellRoot.activeBar ? shellRoot.activeBar.clockRef : null
         anchor.edges: Edges.Bottom | Edges.Left
         anchor.gravity: Edges.Bottom | Edges.Right
     }
 
     CpuDetails {
         id: cpuDetails
-        anchor.item: shellRoot.primaryBar ? shellRoot.primaryBar.cpuRef : null
+        anchor.item: shellRoot.activeBar ? shellRoot.activeBar.cpuRef : null
         anchor.edges: Edges.Bottom | Edges.Right
         anchor.gravity: Edges.Bottom | Edges.Left
     }
 
     RamDetails {
         id: ramDetails
-        anchor.item: shellRoot.primaryBar ? shellRoot.primaryBar.ramRef : null
+        anchor.item: shellRoot.activeBar ? shellRoot.activeBar.ramRef : null
         anchor.edges: Edges.Bottom | Edges.Right
         anchor.gravity: Edges.Bottom | Edges.Left
     }
@@ -104,9 +121,13 @@ ShellRoot {
     }
 
     // ── IPC handlers (Hyprland keybinds via `qs ipc call`) ──────────────
+    // IPC has no screen context — opens on last-clicked bar (or primary)
     IpcHandler {
         target: "toggleAppMenu"
-        function toggle(): void { shellRoot.exclusive(appMenu) }
+        function toggle(): void {
+            if (shellRoot.activeBar) appMenu.screen = shellRoot.activeBar.screen
+            shellRoot.exclusive(appMenu)
+        }
     }
     IpcHandler {
         target: "togglePowerMenu"

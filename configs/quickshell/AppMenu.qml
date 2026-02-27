@@ -15,6 +15,7 @@ PanelWindow {
         left: 10
     }   // 56 = bar exclusiveZone, flush with bar bottom
     exclusiveZone: 0
+    visible: false
     focusable: true
     implicitWidth: 500
     implicitHeight: 560

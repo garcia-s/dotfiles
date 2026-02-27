@@ -16,28 +16,7 @@ PopupWindow {
     Process {
         id: coreProc
         running: cpuRoot.visible
-        command: [
-            "python3", "-c",
-            "import time\n" +
-            "prev = {}\n" +
-            "while True:\n" +
-            "    with open('/proc/stat') as f:\n" +
-            "        for line in f:\n" +
-            "            p = line.split()\n" +
-            "            if len(p[0]) > 3 and p[0].startswith('cpu'):\n" +
-            "                core = p[0][3:]\n" +
-            "                total = sum(int(x) for x in p[1:8])\n" +
-            "                idle = int(p[4])\n" +
-            "                if core in prev:\n" +
-            "                    dt = total - prev[core][0]\n" +
-            "                    di = idle - prev[core][1]\n" +
-            "                    pct = int((1 - di/dt) * 100) if dt > 0 else 0\n" +
-            "                    pct = max(0, min(100, pct))\n" +
-            "                    print(str(core) + ':' + str(pct), flush=True)\n" +
-            "                prev[core] = (total, idle)\n" +
-            "    print('---', flush=True)\n" +
-            "    time.sleep(1)\n"
-        ]
+        command: ["/home/symmetry/.local/bin/qs-sysmon", "cpu"]
         stdout: SplitParser {
             onRead: data => {
                 const line = data.trim()

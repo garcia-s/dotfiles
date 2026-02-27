@@ -16,5 +16,6 @@ flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.f
 
 flatpak remote-add --if-not-exists fedora oci+https://registry.fedoraproject.org
 
-## App for network interfaces
-
+## Build and install qs-sysmon (quickshell stats daemon)
+mkdir -p "$HOME/.local/bin"
+(cd "$(dirname "$0")/cli" && go build -o "$HOME/.local/bin/qs-sysmon" .)

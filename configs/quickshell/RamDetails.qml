@@ -19,17 +19,7 @@ PopupWindow {
     Process {
         id: ramProc
         running: ramRoot.visible
-        command: [
-            "bash", "-c",
-            "total=$(free -m | awk 'NR==2{print $2}'); " +
-            "while true; do " +
-            "  echo \"TOTAL:${total}\"; " +
-            "  ps -eo comm,rss --sort=-rss 2>/dev/null | " +
-            "    awk 'NR>1 && NR<=9 {printf \"%s:%d\\n\", $1, int($2/1024)}'; " +
-            "  echo \"---\"; " +
-            "  sleep 3; " +
-            "done"
-        ]
+        command: ["/home/symmetry/.local/bin/qs-sysmon", "ram"]
         stdout: SplitParser {
             onRead: data => {
                 const line = data.trim()

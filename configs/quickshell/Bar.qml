@@ -46,27 +46,7 @@ PanelWindow {
     Process {
         id: statsProc
         running: true
-        command: [
-            "bash", "-c",
-            "prev=$(awk '/^cpu /{print $2+$3+$4+$5+$6+$7+$8, $5; exit}' /proc/stat); " +
-            "while true; do " +
-            "  sleep 1; " +
-            "  curr=$(awk '/^cpu /{print $2+$3+$4+$5+$6+$7+$8, $5; exit}' /proc/stat); " +
-            "  cpu=$(echo \"$prev $curr\" | awk '{dt=$3-$1; di=$4-$2; c=(dt>0)?int((1-di/dt)*100):0; print (c<0)?0:(c>100?100:c)}'); " +
-            "  prev=$curr; " +
-            "  ram=$(free | awk 'NR==2{print int($3*100/$2)}'); " +
-            "  gpuline=$(nvidia-smi --query-gpu=utilization.gpu,memory.used,memory.total --format=csv,noheader,nounits 2>/dev/null | head -1); " +
-            "  if [ -n \"$gpuline\" ]; then " +
-            "    gu=$(echo \"$gpuline\" | awk -F', ' '{print $1+0}'); " +
-            "    used=$(echo \"$gpuline\" | awk -F', ' '{print $2+0}'); " +
-            "    total=$(echo \"$gpuline\" | awk -F', ' '{print $3+0}'); " +
-            "    gm=$(echo \"$used $total\" | awk '{print ($2>0)?int($1/$2*100):0}'); " +
-            "    echo \"CPU:${cpu}|RAM:${ram}|GPU_UTIL:${gu}|GPU_MEM:${gm}\"; " +
-            "  else " +
-            "    echo \"CPU:${cpu}|RAM:${ram}|GPU_UTIL:N/A|GPU_MEM:N/A\"; " +
-            "  fi; " +
-            "done"
-        ]
+        command: ["/home/symmetry/.local/bin/qs-sysmon", "stats"]
         stdout: SplitParser {
             onRead: data => {
                 const parts = data.split("|")

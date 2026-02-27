@@ -1,6 +1,5 @@
 sddm
 hyprland
-waybar
 nautilus
 pavucontrol
 rofi-wayland

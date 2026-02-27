@@ -1,8 +1,0 @@
-    "custom/power": {
-        "format": "{}",
-        "exec": "echo ; echo  logout",
-        "on-click": "sh $HOME/.config/wlogout/logoutlaunch.sh",
-        "on-click-right": "",
-        "interval": 86400, // once every day
-        "tooltip": true
-    },

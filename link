@@ -1,7 +1,6 @@
 #!/bin/bash
 NUKE_CONFIRM="please dont"
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
-USER=$(whoami)
 
 read -rp "Borrar archivos de configuracion y links existentes? (Y/n): " NUKE_CONFIRM
 if [[ "$NUKE_CONFIRM" != "Y" ]] then

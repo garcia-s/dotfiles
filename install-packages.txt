@@ -11,4 +11,5 @@ git
 cmake
 gcc
 fzf
+material-icons-fonts
 

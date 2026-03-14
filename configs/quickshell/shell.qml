@@ -5,13 +5,16 @@ import QtQuick
 ShellRoot {
     id: shellRoot
 
+    // Load Material Icons — registers "Material Icons" as font.family app-wide
+    FontLoader { source: "fonts/MaterialIcons-Regular.ttf" }
+
     // The bar whose button was last clicked (or first bar as default for IPC)
     property var primaryBar: null
     property var activeBar: null
 
     property bool anyPanelOpen: appMenu.visible || powerMenu.visible ||
                                  calendarPopup.visible || cpuDetails.visible ||
-                                 ramDetails.visible
+                                 ramDetails.visible || audioPanel.visible
 
     // ── Dismiss overlays (one per screen, created first for z-ordering) ──
     Variants {
@@ -59,6 +62,10 @@ ShellRoot {
                     shellRoot.activeBar = bar
                     shellRoot.exclusive(calendarPopup)
                 })
+                toggleAudioPanelRequested.connect(function() {
+                    shellRoot.activeBar = bar
+                    shellRoot.exclusive(audioPanel)
+                })
                 toggleCpuDetailsRequested.connect(function() {
                     shellRoot.activeBar = bar
                     shellRoot.exclusive(cpuDetails)
@@ -90,6 +97,13 @@ ShellRoot {
         anchor.gravity: Edges.Bottom | Edges.Right
     }
 
+    AudioPanel {
+        id: audioPanel
+        anchor.item: shellRoot.activeBar ? shellRoot.activeBar.audioRef : null
+        anchor.edges: Edges.Bottom | Edges.Right
+        anchor.gravity: Edges.Bottom | Edges.Left
+    }
+
     CpuDetails {
         id: cpuDetails
         anchor.item: shellRoot.activeBar ? shellRoot.activeBar.cpuRef : null
@@ -109,6 +123,7 @@ ShellRoot {
         appMenu.visible       = false
         powerMenu.visible     = false
         calendarPopup.visible = false
+        audioPanel.visible    = false
         cpuDetails.visible    = false
         ramDetails.visible    = false
     }

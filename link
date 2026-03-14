@@ -1,0 +1,43 @@
+#!/bin/bash
+NUKE_CONFIRM="please dont"
+SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+USER=$(whoami)
+
+read -rp "Borrar archivos de configuracion y links existentes? (Y/n): " NUKE_CONFIRM
+if [[ "$NUKE_CONFIRM" != "Y" ]] then
+    echo "Se ha cancelado la ejecucion"
+    exit
+fi
+
+CONF_PATH="$HOME/.config"
+
+
+echo "Destruyendo tus configs actuales... por favor espere"
+for path in "$SCRIPT_DIR/configs"/*; do
+    dir="$CONF_PATH/$(basename "$path")"
+    echo "Destruyendo el directorio $dir"
+    unlink $dir
+    if [ -d "$dir" ]; then
+        rm -rf "$dir"
+    fi
+    ln -s "$path" "$CONF_PATH"
+done
+
+
+bash_files=$(find "$SCRIPT_DIR/bash_files" -name ".bash*")
+
+
+echo "Destruyendo tus archivos .bash... espere otro segundo "
+for file in $bash_files; do
+    homefile="$HOME/$(basename $file)" 
+    if [ -f "$homefile" ]; then
+        unlink "$homefile"
+        rm -f "$homefile"
+    fi
+    
+
+    ln -s "$file" "$HOME"
+done
+
+echo "Listo, disfrute de los bugs"
+

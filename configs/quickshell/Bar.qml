@@ -16,6 +16,7 @@ PanelWindow {
     signal toggleAppMenuRequested()
     signal togglePowerMenuRequested()
     signal toggleCalendarRequested()
+    signal toggleAudioPanelRequested()
     signal toggleCpuDetailsRequested()
     signal toggleRamDetailsRequested()
 
@@ -23,6 +24,7 @@ PanelWindow {
     property alias appMenuButtonRef: appMenuBtn
     property alias powerMenuButtonRef: powerMenuBtn
     property alias clockRef: clockItem
+    property alias audioRef: audioBtn
     property alias cpuRef: cpuItem
     property alias ramRef: ramItem
 
@@ -86,7 +88,8 @@ PanelWindow {
                     color: appMenuMa.containsMouse ? "#2a2b3d" : "transparent"
                     Text {
                         anchors.centerIn: parent
-                        text: "󰀻"
+                        text: "\ue5c3"
+                        font.family: "Material Icons"
                         color: "#bb9af7"
                         font.pixelSize: 16
                     }
@@ -106,9 +109,10 @@ PanelWindow {
                     color: powerMenuMa.containsMouse ? "#2a2b3d" : "transparent"
                     Text {
                         anchors.centerIn: parent
-                        text: "⏻"
+                        text: "\ue8ac"
+                        font.family: "Material Icons"
                         color: "#f7768e"
-                        font.pixelSize: 14
+                        font.pixelSize: 16
                     }
                     MouseArea {
                         id: powerMenuMa
@@ -160,6 +164,27 @@ PanelWindow {
             Row {
                 spacing: 14
                 Layout.alignment: Qt.AlignVCenter
+
+                Rectangle {
+                    id: audioBtn
+                    width: 28; height: 28
+                    radius: 6
+                    color: audioMa.containsMouse ? "#2a2b3d" : "transparent"
+                    Text {
+                        anchors.centerIn: parent
+                        text: "\ue050"
+                        font.family: "Material Icons"
+                        color: "#bb9af7"
+                        font.pixelSize: 16
+                    }
+                    MouseArea {
+                        id: audioMa
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        cursorShape: Qt.PointingHandCursor
+                        onClicked: barRoot.toggleAudioPanelRequested()
+                    }
+                }
 
                 Item {
                     id: cpuItem

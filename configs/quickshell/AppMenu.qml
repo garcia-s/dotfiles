@@ -76,9 +76,10 @@ PanelWindow {
 
                     Text {
                         anchors.verticalCenter: parent.verticalCenter
-                        text: "󰍉"
+                        text: "\ue8b6"
+                        font.family: "Material Icons"
                         color: searchField.activeFocus ? "#7aa2f7" : "#565f89"
-                        font.pixelSize: 16
+                        font.pixelSize: 18
                     }
 
                     TextInput {

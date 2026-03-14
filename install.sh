@@ -16,6 +16,12 @@ flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.f
 
 flatpak remote-add --if-not-exists fedora oci+https://registry.fedoraproject.org
 
+## Download Material Icons font for quickshell
+FONTS_DIR="$(dirname "$0")/configs/quickshell/fonts"
+mkdir -p "$FONTS_DIR"
+curl -fLo "$FONTS_DIR/MaterialIcons-Regular.ttf" \
+  "https://github.com/google/material-design-icons/raw/master/font/MaterialIcons-Regular.ttf"
+
 ## Build and install qs-sysmon (quickshell stats daemon)
 mkdir -p "$HOME/.local/bin"
 (cd "$(dirname "$0")/cli" && go build -o "$HOME/.local/bin/qs-sysmon" .)

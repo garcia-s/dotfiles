@@ -16,16 +16,17 @@ shopt -s checkwinsize
 
 
 
-C_FG_W="\[\033[38;2;224;230;255m\]"
-C_BG1="\[\033[48;2;41;46;66m\]"   
-C_BG2="\[\033[48;2;68;71;90m\]"   
-C_BG3="\[\033[48;2;84;92;126m\]"  
-C_RESET="\[\033[0m\]"
+BOLD="\[\033[1m\]"
+FG1="\[\033[38;2;22;29;29m\]"
+BG1="\[\033[48;2;126;156;216m\]"
+BG2="\[\033[48;2;68;71;90m\]"   
+BG3="\[\033[48;2;149;127;184m\]"  
+RESET="\[\033[0m\]"
 
-C_SEP1="\[\033[38;2;41;46;66m\033[48;2;68;71;90m\]"
-C_SEP2="\[\033[38;2;68;71;90m\033[48;2;84;92;126m\]"
-C_END1="\[\033[38;2;68;71;90m\]"
-C_END2="\[\033[38;2;84;92;126m\]"
+SEP1="\[\033[38;2;126;156;216m\033[48;2;68;71;90m\]"
+SEP2="\[\033[38;2;68;71;90m\033[48;2;149;127;184m\]"
+END1="\[\033[38;2;68;71;90m\]"
+END2="\[\033[38;2;149;127;184m\]"
 
 ERR="\[\e[38;2;255;0;0m\]"
 
@@ -35,20 +36,20 @@ build_promt() {
     local EXIT="$?"
     local BRANCH=$(git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/')
 
-    ### user@host > folder section
-    PS1="\n${C_BG1}${C_FG_W} \u@\h ${C_SEP1}${C_BG2}${C_FG_W} \w "
+    PS1="\n${BG1}${FG1}${BOLD} \u@\h ${RESET}${SEP1}${BG2}${FG_W} \w "
 
-    if [ -n "$GIT_BRANCH" ]; then
-        PS1+="${C_SEP2}${C_BG3}${C_FG_W}  $GIT_BRANCH ${C_RESET}${C_END2}${C_RESET}"
+
+    if [ -n "$BRANCH" ]; then
+        PS1+="${SEP2}${BG3}${FG1}${BOLD}  $BRANCH ${RESET}${END2}${RESET}"
     else
-        PS1+="${C_RESET}${C_END1}${C_RESET}"
+        PS1+="${RESET}${END1}${RESET}"
     fi
 
     PS1+="\n"
     if [ "$EXIT" -eq 0 ]; then
-        PS1+="${C_RESET}❯${C_RESET} "
+        PS1+="${RESET}❯${RESET} "
     else
-        PS1+="${ERR}❯${C_RESET} "
+        PS1+="${ERR}❯${RESET} "
     fi
 }
 
@@ -77,10 +78,10 @@ export CHROME_EXECUTABLE=/var/lib/flatpak/app/com.google.Chrome/x86_64/stable/ac
 export PATH=$PATH:$FLUTTER_PATH
 
 # ANDROID STUDIO STUFF
-export ANDROID_HOME=$HOME/Android/Sdk #ANDROID HOME
+export ANDROID_HOME=$HOME/android_sdk #ANDROID HOME
 export PATH=$PATH:$ANDROID_HOME/emulator #EMULATOR 
-export PATH=$PATH:$ANDROID_HOME/platform-tools # ANDROID TOOLS
-export PATH=$PATH:$HOME/dev/android-studio/bin # ANDROID TOOLS
+export PATH=$PATH:$ANDROID_HOME/platform-tools 
+export PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin 
 
 #PERSONAL SCRIPTS PATH
 export PATH=$PATH:$HOME/scripts
@@ -93,9 +94,9 @@ export PATH=$PATH:$GOPATH/bin
 
 GOPRIVATE=github.com/garcia-s
 GONOPROXY=true
+
 #JAVA
-export STUDIO_JDK=/usr/lib/jvm/jre-1.8.0-openjdk/bin/java
-export JAVA_HOME=/etc/alternatives/java_sdk
+export JAVA_HOME=$(dirname $(dirname $(readlink -f $(which java))))
 export PATH=$PATH:$JAVA_HOME/bin
 
 #GRADLE

@@ -7,12 +7,12 @@ PanelWindow {
     id: barRoot
 
     anchors { top: true; left: true; right: true }
-    margins { top: 10; left: 10; right: 10 }
+    margins { top: 10; left: 10; right: 10; bottom: 10 }
+
     implicitHeight: 40
     color: "transparent"
     exclusiveZone: 40
 
-    // Signals — handled by shell.qml which owns the popup instances
     signal toggleAppMenuRequested()
     signal togglePowerMenuRequested()
     signal toggleCalendarRequested()
@@ -20,7 +20,6 @@ PanelWindow {
     signal toggleCpuDetailsRequested()
     signal toggleRamDetailsRequested()
 
-    // Item refs exposed for PopupWindow anchoring
     property alias appMenuButtonRef: appMenuBtn
     property alias powerMenuButtonRef: powerMenuBtn
     property alias clockRef: clockItem
@@ -28,13 +27,11 @@ PanelWindow {
     property alias cpuRef: cpuItem
     property alias ramRef: ramItem
 
-    // Stats values
     property string cpuVal: "--"
     property string ramVal: "--"
     property string gpuUtil: "--"
     property string gpuMem: "--"
 
-    // Clock
     property string clockTime: Qt.formatTime(new Date(), "hh:mm")
 
     Timer {
@@ -44,7 +41,6 @@ PanelWindow {
         onTriggered: barRoot.clockTime = Qt.formatTime(new Date(), "hh:mm")
     }
 
-    // System stats process
     Process {
         id: statsProc
         running: true
@@ -76,7 +72,6 @@ PanelWindow {
             anchors.margins: 6
             spacing: 0
 
-            // ── LEFT: App menu + Power ──────────────────────────────────
             Row {
                 spacing: 4
                 Layout.alignment: Qt.AlignVCenter

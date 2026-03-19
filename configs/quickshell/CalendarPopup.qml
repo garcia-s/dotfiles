@@ -4,7 +4,6 @@ import QtQuick.Layouts
 
 PopupWindow {
     id: calRoot
-
     width: 268
     height: 242
     color: "transparent"

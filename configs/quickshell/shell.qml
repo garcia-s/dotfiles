@@ -2,13 +2,11 @@ import Quickshell
 import Quickshell.Io
 import QtQuick
 
+
 ShellRoot {
     id: shellRoot
-
-    // Load Material Icons — registers "Material Icons" as font.family app-wide
     FontLoader { source: "fonts/MaterialIcons-Regular.ttf" }
 
-    // The bar whose button was last clicked (or first bar as default for IPC)
     property var primaryBar: null
     property var activeBar: null
 
@@ -16,7 +14,6 @@ ShellRoot {
                                  calendarPopup.visible || cpuDetails.visible ||
                                  ramDetails.visible || audioPanel.visible
 
-    // ── Dismiss overlays (one per screen, created first for z-ordering) ──
     Variants {
         model: Quickshell.screens
         delegate: PanelWindow {
@@ -34,7 +31,6 @@ ShellRoot {
         }
     }
 
-    // ── Bar — one instance per screen ────────────────────────────────────
     Variants {
         model: Quickshell.screens
         delegate: Bar {
@@ -42,7 +38,6 @@ ShellRoot {
             screen: modelData
 
             Component.onCompleted: {
-                // First bar becomes the default for IPC keybinds
                 if (shellRoot.primaryBar === null) {
                     shellRoot.primaryBar = this
                     shellRoot.activeBar  = this
@@ -78,10 +73,8 @@ ShellRoot {
         }
     }
 
-    // ── AppMenu — PanelWindow, screen set dynamically on open ────────────
     AppMenu { id: appMenu }
 
-    // ── Remaining popups — anchored to whichever bar was last clicked ─────
 
     PowerMenu {
         id: powerMenu
@@ -118,7 +111,6 @@ ShellRoot {
         anchor.gravity: Edges.Bottom | Edges.Left
     }
 
-    // ── Helpers ──────────────────────────────────────────────────────────
     function closeAll() {
         appMenu.visible       = false
         powerMenu.visible     = false
@@ -128,15 +120,12 @@ ShellRoot {
         ramDetails.visible    = false
     }
 
-    // Open one panel exclusively; toggle off if already open
     function exclusive(panel) {
         const wasVisible = panel.visible
         closeAll()
         panel.visible = !wasVisible
     }
 
-    // ── IPC handlers (Hyprland keybinds via `qs ipc call`) ──────────────
-    // IPC has no screen context — opens on last-clicked bar (or primary)
     IpcHandler {
         target: "toggleAppMenu"
         function toggle(): void {

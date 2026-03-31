@@ -7,9 +7,11 @@ import "components"
 import "services"
 
 PanelWindow {
-    id: mainBar
+    id: bar
     Component.onCompleted: {
-        SystemTray.isHost = true;
+        if (this.WlrLayershell != null) {
+            this.WlrLayershell.layer = WlrLayer.Top;
+        }
     }
 
     screen: screen
@@ -34,98 +36,59 @@ PanelWindow {
 
     color: "transparent"
 
-    FontLoader {
-        id: materialIcons
-        source: "fonts/MaterialIcons-Regular.ttf"
-    }
-
     AppsPanel {
-        id: appsPanel
-        screen: mainBar.screen
-        isOpen: activePanel === "apps"
-        onRequestClose: activePanel = ""
+        screen: bar.screen
+        isOpen: activePanel == "apps"
     }
 
     SoundPanel {
-        id: soundPanel
-        screen: mainBar.screen
-        isOpen: activePanel === "sound"
+        screen: bar.screen
+        isOpen: activePanel == "sound"
     }
-
     Rectangle {
-        anchors.left: parent.left
-        anchors.right: parent.right
         anchors.verticalCenter: parent.verticalCenter
         height: parent.height - 100
+        width: 40
         color: "#1a1b26"
         topRightRadius: 20
         bottomRightRadius: 20
 
         ColumnLayout {
             id: buttons
+            anchors.fill: parent
             anchors.horizontalCenter: parent.horizontalCenter
-            anchors.top: parent.top
             anchors.topMargin: 20
-            anchors.bottom: parent.bottom
             anchors.bottomMargin: 20
-
             spacing: 20
+            width: parent.width
 
-            Rectangle {
+            Button {
                 id: appsButton
-                width: 30
-                height: 30
-                color: activePanel === "apps" ? "#bd93f9" : "#1a1b26"
-                radius: 3
-                anchors.horizontalCenter: parent.horizontalCenter
-
-                Text {
-                    anchors.centerIn: parent
-                    text: "\ue5c3"
-                    color: "white"
-                    font.family: materialIcons.name
-                    font.pixelSize: 22
-                }
-
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: togglePanel("apps")
-                }
+                icon: "\ue5c3"
+                Layout.alignment: Qt.AlignHCenter
+                onClicked: togglePanel("apps")
             }
-
-            // Workspace Pills
-
             Workspaces {}
+
             Rectangle {
-                id: soundButton
                 width: 28
                 height: 80
                 color: activePanel === "sound" ? "#bd93f9" : "#111"
                 radius: 20
                 anchors.horizontalCenter: parent.horizontalCenter
 
-                Column {
-                    id: configs
-                    spacing: 10
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    anchors.verticalCenter: parent.verticalCenter
-                    Text {
-                        text: "\ue04d"
-                        color: "white"
-                        font.family: materialIcons.name
-                        font.pixelSize: 22
-                    }
-                    Text {
-                        text: "\ue1a7"
-                        color: "white"
-                        font.family: materialIcons.name
-                        font.pixelSize: 22
-                    }
-                }
-
-                MouseArea {
+                ColumnLayout {
                     anchors.fill: parent
-                    onClicked: togglePanel("sound")
+                    anchors.verticalCenter: parent.verticalCenter
+                    RoundedButton {
+                        icon: "\ue04d"
+                        Layout.alignment: Qt.AlignHCenter
+                        onClicked: togglePanel("sound")
+                    }
+                    RoundedButton {
+                        icon: "\ue1a7"
+                        Layout.alignment: Qt.AlignHCenter
+                    }
                 }
             }
 
@@ -133,10 +96,10 @@ PanelWindow {
                 Layout.fillHeight: true
             }
             Tray {
-                anchors.horizontalCenter: parent.horizontalCenter
+                Layout.alignment: Qt.AlignHCenter
             }
             Clock {
-                anchors.horizontalCenter: parent.horizontalCenter
+                Layout.alignment: Qt.AlignHCenter
             }
         }
     }

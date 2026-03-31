@@ -14,7 +14,6 @@ Item {
     property string searchText: ""
     property int selectedIndex: 0
 
-    // Access the raw array of applications for reliable filtering
     readonly property var filteredApps: {
         var all = DesktopEntries.applications.values;
         if (searchText.trim() === "") {
@@ -32,12 +31,6 @@ Item {
             focusTimer.start();
         }
     }
-
-    FontLoader {
-        id: materialIcons
-        source: "fonts/MaterialIcons-Regular.ttf"
-    }
-
     Timer {
         id: focusTimer
         interval: 50
@@ -46,7 +39,9 @@ Item {
 
     RoundedPanel {
         id: panel
+        screen: root.screen
         isOpen: root.isOpen
+        margins.top: 80
         width: 500
         height: root.screen ? root.screen.height * 0.6 : 600
         focusable: true
@@ -54,7 +49,7 @@ Item {
         ColumnLayout {
             anchors.fill: parent
             anchors.margins: 30
-            spacing: 25
+            spacing: 2
 
             // Search Box
             Rectangle {
@@ -116,7 +111,6 @@ Item {
                             text: "Search applications..."
                             color: "white"
                             opacity: 0.3
-                            visible: !searchInput.text && !searchInput.activeFocus
                             font.pixelSize: 18
                         }
                     }
@@ -161,7 +155,6 @@ Item {
                                 // Fallback for Material Icon if no system icon found
                                 Text {
                                     anchors.centerIn: parent
-                                    visible: parent.status !== Image.Ready
                                     text: "\ue8b5"
                                     font.family: materialIcons.name
                                     font.pixelSize: 28

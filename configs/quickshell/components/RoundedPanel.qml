@@ -5,37 +5,32 @@ import QtQuick.Layouts
 
 PanelWindow {
     id: root
-    property bool isOpen: false
-    property var radius: 40
-    default property alias content: container.data
-    color: "transparent"
-    visible: root.isOpen
-    exclusiveZone: -10000000
-    focusable: true
-
-    anchors {
-        left: true
-        top: true
+    Component.onCompleted: {
+        if (this.WlrLayershell != null) {
+            this.WlrLayershell.layer = WlrLayer.Top;
+        }
     }
 
-    margins {
-        top: 60
+    property var radius: 30
+    property bool isOpen: false
+    exclusiveZone: -10000
+    color: "transparent"
+    anchors.left: true
+    anchors.top: true
+    margins.left: isOpen ? 0 : -root.width - bar.implicitWidth
+
+    Behavior on margins.left {
+        NumberAnimation {
+            duration: 450
+            easing.type: Easing.OutQuint
+        }
     }
 
     Rectangle {
         id: body
         color: "transparent"
         anchors.fill: parent
-        anchors.leftMargin: root.isOpen ? 0 : -root.width
 
-        Behavior on anchors.leftMargin {
-            NumberAnimation {
-                duration: 450
-                easing.type: Easing.OutQuint
-            }
-        }
-
-        // Main colored bar
         Rectangle {
             id: mainBarBackground
             width: parent.width

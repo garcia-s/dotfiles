@@ -1,48 +1,61 @@
 import Quickshell
 import Quickshell.Services.SystemTray
+import Quickshell.Hyprland
 import Quickshell.Wayland
 import Quickshell.Io
 import QtQuick
 import "services"
 
 ShellRoot {
-    id: qs
+    id: shell
+    property var bars: ({})
+
+    function getCurrentPanel() {
+        return shell.bars[Hyprland.focusedMonitor?.name ?? ""];
+    }
 
     FontLoader {
         id: materialIcons
         source: "fonts/MaterialIcons-Regular.ttf"
     }
 
-    property var bars: []
-
-    function toggleApps() {
-        for (var i = 0; i < bars.length; i++) {
-            bars[i].togglePanel("apps");
-        }
-    }
-
-    function toggleSound() {
-        for (var i = 0; i < bars.length; i++) {
-            bars[i].togglePanel("sound");
-        }
-    }
-
     Variants {
         model: Quickshell.screens
-        Bar {
+        delegate: Bar {
             id: bar
             property var modelData
             screen: modelData
 
             Component.onCompleted: {
-                bars.push(bar);
+                let p = Object.assign({}, shell.bars);
+                p[modelData.name] = bar;
+                shell.bars = p;
             }
 
             Component.onDestruction: {
-                var index = bars.indexOf(bar);
-                if (index !== -1)
-                    bars.splice(index, 1);
+                let p = Object.assign({}, shell.bars);
+                delete p[modelData.name];
+                shell.bars = p;
             }
+        }
+    }
+
+    IpcHandler {
+        target: "panels"
+        function toggle(type: string): void {
+            const panel = shell.getCurrentPanel();
+            if (panel)
+                panel.togglePanel(type);
+        }
+    }
+
+    IpcHandler {
+        target: "audio"
+        function increaseVolume(): void {
+            const panel = shell.getCurrentPanel();
+            if (panel)
+            panel.togglePanel("sound");
+           
         }
     }
 }

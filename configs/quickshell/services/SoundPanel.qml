@@ -48,6 +48,7 @@ Item {
 
     RoundedPanel {
         id: panel
+        screen: root.screen
         isOpen: root.isOpen
         margins.top: 140
         width: 300

@@ -106,18 +106,10 @@ Item {
                                 event.accepted = true;
                             }
                         }
-
-                        Text {
-                            text: "Search applications..."
-                            color: "white"
-                            opacity: 0.3
-                            font.pixelSize: 18
-                        }
                     }
                 }
             }
 
-            // Apps Grid
             GridView {
                 id: appsGrid
                 Layout.fillWidth: true
@@ -145,21 +137,11 @@ Item {
                             spacing: 8
                             width: parent.width - 10
 
-                            // Quickshell IconImage widget for themed icons
                             IconImage {
                                 Layout.alignment: Qt.AlignHCenter
                                 width: 48
                                 height: 48
                                 source: Quickshell.iconPath(modelData.icon || "application-x-executable")
-
-                                // Fallback for Material Icon if no system icon found
-                                Text {
-                                    anchors.centerIn: parent
-                                    text: "\ue8b5"
-                                    font.family: materialIcons.name
-                                    font.pixelSize: 28
-                                    color: "white"
-                                }
                             }
 
                             Text {

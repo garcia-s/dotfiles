@@ -39,6 +39,7 @@ PanelWindow {
     AppsPanel {
         screen: bar.screen
         isOpen: activePanel == "apps"
+        onRequestClose: togglePanel("apps")
     }
 
     SoundPanel {
@@ -73,13 +74,11 @@ PanelWindow {
             Rectangle {
                 width: 28
                 height: 80
-                color: activePanel === "sound" ? "#bd93f9" : "#111"
+                color: "#111"
                 radius: 20
-                anchors.horizontalCenter: parent.horizontalCenter
-
+                Layout.alignment: Qt.AlignHCenter
                 ColumnLayout {
                     anchors.fill: parent
-                    anchors.verticalCenter: parent.verticalCenter
                     RoundedButton {
                         icon: "\ue04d"
                         Layout.alignment: Qt.AlignHCenter

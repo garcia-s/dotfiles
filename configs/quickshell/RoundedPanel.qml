@@ -26,6 +26,14 @@ PanelWindow {
         id: body
         color: "transparent"
         anchors.fill: parent
+        anchors.leftMargin: root.isOpen ? 0 : -root.width
+
+        Behavior on anchors.leftMargin {
+            NumberAnimation {
+                duration: 450
+                easing.type: Easing.OutQuint
+            }
+        }
 
         // Main colored bar
         Rectangle {

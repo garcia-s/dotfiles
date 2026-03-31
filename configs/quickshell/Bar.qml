@@ -17,7 +17,6 @@ PanelWindow {
     implicitWidth: 40
     property int currentWorkspace: 1
     property string activePanel: ""
-    property var appsService: null
 
     function togglePanel(panelName) {
         if (activePanel === panelName) {
@@ -44,7 +43,6 @@ PanelWindow {
     AppsPanel {
         id: appsPanel
         screen: mainBar.screen
-        appsService: mainBar.appsService
         isOpen: activePanel === "apps"
         onRequestClose: activePanel = ""
     }

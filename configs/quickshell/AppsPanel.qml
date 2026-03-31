@@ -1,6 +1,5 @@
 import Quickshell
-import Quickshell.Hyprland
-import Quickshell.Io
+import Quickshell.Widgets
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
@@ -9,63 +8,33 @@ Item {
     id: root
     property bool isOpen: false
     property var screen: null
-    property var appsService: null
-    signal requestClose
+    signal requestClose()
 
     property string searchText: ""
-    property var filteredApps: []
     property int selectedIndex: 0
 
-    FontLoader {
-        id: materialIcons
-        source: "fonts/MaterialIcons-Regular.ttf"
-    }
-
-    onSearchTextChanged: {
-        filterApps();
-        selectedIndex = 0;
-    }
-
-    // React to changes in the underlying app list
-    Connections {
-        target: appsService
-        function onAllAppsChanged() {
-            filterApps();
+    // Filtered application list using the built-in DesktopEntries.applications
+    readonly property var filteredApps: {
+        var all = DesktopEntries.applications;
+        if (searchText.trim() === "") {
+            return all;
+        } else {
+            var search = searchText.toLowerCase();
+            return all.filter(app => app.name.toLowerCase().includes(search));
         }
     }
 
+    onSearchTextChanged: selectedIndex = 0
+
     onIsOpenChanged: {
         if (isOpen) {
-            filterApps();
             focusTimer.start();
         }
     }
 
-    function filterApps() {
-        if (!appsService)
-            return;
-
-        var allApps = appsService.allApps;
-        if (searchText.trim() === "") {
-            filteredApps = allApps;
-        } else {
-            var search = searchText.toLowerCase();
-            var result = [];
-            for (var i = 0; i < allApps.length; i++) {
-                if (allApps[i].name.toLowerCase().includes(search)) {
-                    result.push(allApps[i]);
-                }
-            }
-            filteredApps = result;
-        }
-    }
-
-    function launch(exec) {
-        var cleanExec = exec.replace(/%[a-zA-Z]/g, "").trim();
-        var proc = Qt.createQmlObject('import Quickshell.Io; Process { command: ["sh", "-c", "' + cleanExec + ' &"] }', root);
-        proc.run();
-        root.requestClose();
-        searchText = "";
+    FontLoader {
+        id: materialIcons
+        source: "fonts/MaterialIcons-Regular.ttf"
     }
 
     Timer {
@@ -76,13 +45,9 @@ Item {
 
     RoundedPanel {
         id: panel
-        anchors: {
-            left: true;
-        }
         isOpen: root.isOpen
-        screen: root.screen
-        width: 800
-        height: 800
+        width: 500
+        height: root.screen ? root.screen.height * 0.6 : 600
         focusable: true
 
         ColumnLayout {
@@ -119,12 +84,14 @@ Item {
                         font.pixelSize: 18
                         text: root.searchText
                         onTextChanged: root.searchText = text
-
-                        Keys.onPressed: event => {
+                        
+                        Keys.onPressed: (event) => {
                             if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
                                 if (filteredApps.length > selectedIndex) {
-                                    root.launch(filteredApps[selectedIndex].exec);
+                                    filteredApps[selectedIndex].exec();
                                 }
+                                root.requestClose();
+                                searchText = "";
                                 event.accepted = true;
                             } else if (event.key === Qt.Key_Escape) {
                                 root.requestClose();
@@ -143,12 +110,7 @@ Item {
                                 event.accepted = true;
                             }
                         }
-                        HyprlandFocusGrab {
-                            id: grab
-                            windows: [root.Window.window]
-                            active:root.isOpen
-                        }
-
+                        
                         Text {
                             text: "Search applications..."
                             color: "white"
@@ -167,7 +129,7 @@ Item {
                 Layout.fillHeight: true
                 clip: true
                 model: root.filteredApps
-                cellWidth: 100
+                cellWidth: 110
                 cellHeight: 110
                 currentIndex: root.selectedIndex
 
@@ -179,7 +141,7 @@ Item {
                         anchors.fill: parent
                         anchors.margins: 5
                         color: (root.selectedIndex === index || gridMouseArea.containsMouse) ? "#33ffffff" : "#22232e"
-                        radius: 15
+                        radius: 20
                         border.color: (root.selectedIndex === index || gridMouseArea.containsMouse) ? "#bd93f9" : "transparent"
                         border.width: 2
 
@@ -188,15 +150,17 @@ Item {
                             spacing: 8
                             width: parent.width - 10
 
-                            Rectangle {
+                            // Quickshell IconImage widget for themed icons
+                            IconImage {
                                 Layout.alignment: Qt.AlignHCenter
-                                width: 45
-                                height: 45
-                                color: "#1a1b26"
-                                radius: 10
-
+                                width: 48
+                                height: 48
+                                source: modelData.icon || "application-x-executable"
+                                
+                                // Fallback for Material Icon if no system icon found
                                 Text {
                                     anchors.centerIn: parent
+                                    visible: parent.status !== Image.Ready
                                     text: "\ue8b5"
                                     font.family: materialIcons.name
                                     font.pixelSize: 28
@@ -221,8 +185,9 @@ Item {
                             anchors.fill: parent
                             hoverEnabled: true
                             onClicked: {
-                                root.selectedIndex = index;
-                                root.launch(modelData.exec);
+                                modelData.exec();
+                                root.requestClose();
+                                root.searchText = "";
                             }
                         }
                     }

@@ -13,26 +13,37 @@ Item {
 
     function refreshApps() {
         loading = true;
-        // Improved shell command to find and parse desktop files
-        var cmd = "find /usr/share/applications -name '*.desktop' -maxdepth 1 | xargs grep -hE '^(Name|Exec|Icon)=' | awk -F= '{ if($1==\"Name\") name=$2; else if($1==\"Exec\") exec=$2; else if($1==\"Icon\") { icon=$2; print name\"|\"exec\"|\"icon; name=\"\"; exec=\"\"; icon=\"\" } }' | sort -u";
+        discoveryProcess.running = true;
+    }
 
-        var proc = Qt.createQmlObject('import Quickshell.Io; Process { command: ["sh", "-c", "' + cmd + '"] }', root);
-        proc.onExited.connect(function () {
-            var lines = proc.stdout.trim().split("\n");
-            var apps = [];
-            for (var i = 0; i < lines.length; i++) {
-                var parts = lines[i].split("|");
-                if (parts.length >= 2) {
-                    apps.push({
-                        name: parts[0],
-                        exec: parts[1],
-                        icon: parts[2] || "application-x-executable"
-                    });
+    Process {
+        id: discoveryProcess
+        
+        // Use an absolute path derived from the config directory
+        command: ["python3", Quickshell.configPath + "/services/get_apps.py"]
+        running: false
+        
+        stdout: StdioCollector { id: outputCollector }
+        stderr: StdioCollector { id: errorCollector }
+        
+        onExited: {
+            if (exitCode === 0 && outputCollector.text) {
+                try {
+                    var data = JSON.parse(outputCollector.text);
+                    if (Array.isArray(data) && data.length > 0) {
+                        root.allApps = data;
+                    } else {
+                        // Fallback if script returned empty array
+                        root.allApps = [{name: "No apps found", exec: "", icon: "error"}];
+                    }
+                } catch (e) {
+                    root.allApps = [{name: "Parse Error", exec: "", icon: "error"}];
                 }
+            } else {
+                // If the process failed, show an error entry
+                root.allApps = [{name: "Discovery Failed (Exit " + exitCode + ")", exec: "", icon: "error"}];
             }
-            root.allApps = apps;
-            loading = false;
-        });
-        proc.run();
+            root.loading = false;
+        }
     }
 }

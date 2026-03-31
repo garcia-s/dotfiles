@@ -12,8 +12,6 @@ import (
 	"time"
 )
 
-// --- /proc/stat CPU parsing ---
-
 type cpuStat struct {
 	total, idle int64
 }

@@ -1,242 +1,122 @@
+import Quickshell.Services.SystemTray
 import Quickshell
 import Quickshell.Io
-import QtQuick
 import QtQuick.Layouts
+import QtQuick
+import "components"
 
 PanelWindow {
-    id: barRoot
+    id: mainBar
 
-    anchors { top: true; left: true; right: true }
-    margins { top: 10; left: 10; right: 10; bottom: 10 }
-
-    implicitHeight: 40
-    color: "transparent"
-    exclusiveZone: 40
-
-    signal toggleAppMenuRequested()
-    signal togglePowerMenuRequested()
-    signal toggleCalendarRequested()
-    signal toggleAudioPanelRequested()
-    signal toggleCpuDetailsRequested()
-    signal toggleRamDetailsRequested()
-
-    property alias appMenuButtonRef: appMenuBtn
-    property alias powerMenuButtonRef: powerMenuBtn
-    property alias clockRef: clockItem
-    property alias audioRef: audioBtn
-    property alias cpuRef: cpuItem
-    property alias ramRef: ramItem
-
-    property string cpuVal: "--"
-    property string ramVal: "--"
-    property string gpuUtil: "--"
-    property string gpuMem: "--"
-
-    property string clockTime: Qt.formatTime(new Date(), "hh:mm")
-
-    Timer {
-        interval: 1000
-        running: true
-        repeat: true
-        onTriggered: barRoot.clockTime = Qt.formatTime(new Date(), "hh:mm")
+    Component.onCompleted: {
+        SystemTray.isHost = true;
+        console.log("Quickshell system tray workign");
     }
 
-    Process {
-        id: statsProc
-        running: true
-        command: ["/home/symmetry/.local/bin/qs-sysmon", "stats"]
-        stdout: SplitParser {
-            onRead: data => {
-                const parts = data.split("|")
-                for (const part of parts) {
-                    const idx = part.indexOf(":")
-                    if (idx < 0) continue
-                    const key = part.substring(0, idx).trim()
-                    const val = part.substring(idx + 1).trim()
-                    if      (key === "CPU")      barRoot.cpuVal  = val + "%"
-                    else if (key === "RAM")      barRoot.ramVal  = val + "%"
-                    else if (key === "GPU_UTIL") barRoot.gpuUtil = val === "N/A" ? "N/A" : val + "%"
-                    else if (key === "GPU_MEM")  barRoot.gpuMem  = val === "N/A" ? "N/A" : val + "%"
-                }
-            }
-        }
+    screen: screen
+    implicitWidth: 40
+    property int currentWorkspace: 1
+
+    anchors {
+        top: true
+        left: true
+        bottom: true
+        right: false
+    }
+
+    color: "transparent"
+
+    FontLoader {
+        id: materialIcons
+        source: "fonts/MaterialIcons-Regular.ttf"
     }
 
     Rectangle {
-        anchors.fill: parent
-        radius: 8
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.verticalCenter: parent.verticalCenter
+        height: parent.height - 100
         color: "#1a1b26"
+        topRightRadius: 20
+        bottomRightRadius: 20
 
-        RowLayout {
-            anchors.fill: parent
-            anchors.margins: 6
-            spacing: 0
+        ColumnLayout {
+            id: buttons
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.top: parent.top
+            anchors.topMargin: 20
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 20
 
-            Row {
-                spacing: 4
-                Layout.alignment: Qt.AlignVCenter
+            spacing: 20
 
-                Rectangle {
-                    id: appMenuBtn
-                    width: 28; height: 28
-                    radius: 6
-                    color: appMenuMa.containsMouse ? "#2a2b3d" : "transparent"
-                    Text {
-                        anchors.centerIn: parent
-                        text: "\ue5c3"
-                        font.family: "Material Icons"
-                        color: "#bb9af7"
-                        font.pixelSize: 16
-                    }
-                    MouseArea {
-                        id: appMenuMa
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: barRoot.toggleAppMenuRequested()
-                    }
-                }
+            Rectangle {
+                id: myButton
+                width: 30
+                height: 30
+                color: "#1a1b26"
+                radius: 3
+                anchors.horizontalCenter: parent.horizontalCenter
 
-                Rectangle {
-                    id: powerMenuBtn
-                    width: 28; height: 28
-                    radius: 6
-                    color: powerMenuMa.containsMouse ? "#2a2b3d" : "transparent"
-                    Text {
-                        anchors.centerIn: parent
-                        text: "\ue8ac"
-                        font.family: "Material Icons"
-                        color: "#f7768e"
-                        font.pixelSize: 16
-                    }
-                    MouseArea {
-                        id: powerMenuMa
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: barRoot.togglePowerMenuRequested()
-                    }
-                }
-            }
-
-            // ── LEFT FILL ───────────────────────────────────────────────
-            Item { Layout.fillWidth: true }
-
-            // ── CENTER: Clock ───────────────────────────────────────────
-            Item {
-                id: clockItem
-                Layout.alignment: Qt.AlignVCenter
-                implicitWidth: clockText.implicitWidth + 20
-                implicitHeight: 28
-
-                Rectangle {
-                    anchors.fill: parent
-                    radius: 6
-                    color: clockMa.containsMouse ? "#2a2b3d" : "transparent"
-                }
                 Text {
-                    id: clockText
                     anchors.centerIn: parent
-                    text: barRoot.clockTime
-                    color: "#c0caf5"
-                    font.pixelSize: 14
-                    font.bold: true
-                    font.family: "monospace"
+                    text: "\ue5c3"
+                    color: "white"
+                    font.family: materialIcons.name // Added font family
+                    font.pixelSize: 22
                 }
+
                 MouseArea {
-                    id: clockMa
                     anchors.fill: parent
-                    hoverEnabled: true
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked: barRoot.toggleCalendarRequested()
+                    onClicked: console.log("Menu clicked")
                 }
             }
 
-            // ── RIGHT FILL ──────────────────────────────────────────────
-            Item { Layout.fillWidth: true }
+            // Workspace Pills
 
-            // ── RIGHT: System stats ─────────────────────────────────────
-            Row {
-                spacing: 14
-                Layout.alignment: Qt.AlignVCenter
+            Workspaces {}
+            Rectangle {
+                id: different
+                width: 28
+                height: 80
+                color: "#111"
+                radius: 20
+                anchors.horizontalCenter: parent.horizontalCenter
 
-                Rectangle {
-                    id: audioBtn
-                    width: 28; height: 28
-                    radius: 6
-                    color: audioMa.containsMouse ? "#2a2b3d" : "transparent"
-                    Text {
-                        anchors.centerIn: parent
-                        text: "\ue050"
-                        font.family: "Material Icons"
-                        color: "#bb9af7"
-                        font.pixelSize: 16
-                    }
-                    MouseArea {
-                        id: audioMa
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: barRoot.toggleAudioPanelRequested()
-                    }
-                }
-
-                Item {
-                    id: cpuItem
-                    implicitWidth: cpuRow.implicitWidth + 12
-                    implicitHeight: 28
-                    Rectangle {
-                        anchors.fill: parent; radius: 6
-                        color: cpuMa.containsMouse ? "#2a2b3d" : "transparent"
-                    }
-                    Row {
-                        id: cpuRow
-                        anchors.centerIn: parent
-                        spacing: 4
-                        Text { text: "CPU"; color: "#7aa2f7"; font.pixelSize: 12; font.bold: true }
-                        Text { text: barRoot.cpuVal; color: "#c0caf5"; font.pixelSize: 12; font.family: "monospace" }
-                    }
-                    MouseArea {
-                        id: cpuMa
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: barRoot.toggleCpuDetailsRequested()
-                    }
-                }
-
-                Item {
-                    id: ramItem
-                    implicitWidth: ramRow.implicitWidth + 12
-                    implicitHeight: 28
-                    Rectangle {
-                        anchors.fill: parent; radius: 6
-                        color: ramMa.containsMouse ? "#2a2b3d" : "transparent"
-                    }
-                    Row {
-                        id: ramRow
-                        anchors.centerIn: parent
-                        spacing: 4
-                        Text { text: "RAM"; color: "#9ece6a"; font.pixelSize: 12; font.bold: true }
-                        Text { text: barRoot.ramVal; color: "#c0caf5"; font.pixelSize: 12; font.family: "monospace" }
-                    }
-                    MouseArea {
-                        id: ramMa
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: barRoot.toggleRamDetailsRequested()
-                    }
-                }
-
-                Row {
-                    spacing: 4
+                Column {
+                    id: configs
+                    spacing: 10
+                    anchors.horizontalCenter: parent.horizontalCenter
                     anchors.verticalCenter: parent.verticalCenter
-                    Text { text: "GPU"; color: "#ff9e64"; font.pixelSize: 12; font.bold: true }
-                    Text { text: barRoot.gpuUtil; color: "#c0caf5"; font.pixelSize: 12; font.family: "monospace" }
-                    Text { text: "/"; color: "#414868"; font.pixelSize: 12 }
-                    Text { text: barRoot.gpuMem; color: "#e0af68"; font.pixelSize: 12; font.family: "monospace" }
+                    Text {
+
+                        text: "\ue04d"
+                        color: "white"
+                        font.family: materialIcons.name
+                        font.pixelSize: 22
+                    }
+                    Text {
+                        text: "\ue1a7"
+                        color: "white"
+                        font.family: materialIcons.name
+                        font.pixelSize: 22
+                    }
                 }
+
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: console.log("Menu clicked")
+                }
+            }
+
+            Item {
+                Layout.fillHeight: true
+            }
+            Tray {
+                anchors.horizontalCenter: parent.horizontalCenter
+            }
+            Clock {
+                anchors.horizontalCenter: parent.horizontalCenter
             }
         }
     }

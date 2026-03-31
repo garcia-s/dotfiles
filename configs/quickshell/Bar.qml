@@ -4,13 +4,12 @@ import Quickshell.Io
 import QtQuick.Layouts
 import QtQuick
 import "components"
+import "services"
 
 PanelWindow {
     id: mainBar
-
     Component.onCompleted: {
         SystemTray.isHost = true;
-        console.log("Quickshell system tray workign");
     }
 
     screen: screen

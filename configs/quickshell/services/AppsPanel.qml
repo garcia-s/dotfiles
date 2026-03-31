@@ -3,19 +3,20 @@ import Quickshell.Widgets
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
+import "../components"
 
 Item {
     id: root
     property bool isOpen: false
     property var screen: null
-    signal requestClose()
+    signal requestClose
 
     property string searchText: ""
     property int selectedIndex: 0
 
-    // Filtered application list using the built-in DesktopEntries.applications
+    // Access the raw array of applications for reliable filtering
     readonly property var filteredApps: {
-        var all = DesktopEntries.applications;
+        var all = DesktopEntries.applications.values;
         if (searchText.trim() === "") {
             return all;
         } else {
@@ -84,11 +85,11 @@ Item {
                         font.pixelSize: 18
                         text: root.searchText
                         onTextChanged: root.searchText = text
-                        
-                        Keys.onPressed: (event) => {
+
+                        Keys.onPressed: event => {
                             if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
                                 if (filteredApps.length > selectedIndex) {
-                                    filteredApps[selectedIndex].exec();
+                                    filteredApps[selectedIndex].execute();
                                 }
                                 root.requestClose();
                                 searchText = "";
@@ -110,7 +111,7 @@ Item {
                                 event.accepted = true;
                             }
                         }
-                        
+
                         Text {
                             text: "Search applications..."
                             color: "white"
@@ -155,8 +156,8 @@ Item {
                                 Layout.alignment: Qt.AlignHCenter
                                 width: 48
                                 height: 48
-                                source: modelData.icon || "application-x-executable"
-                                
+                                source: Quickshell.iconPath(modelData.icon || "application-x-executable")
+
                                 // Fallback for Material Icon if no system icon found
                                 Text {
                                     anchors.centerIn: parent
@@ -185,7 +186,7 @@ Item {
                             anchors.fill: parent
                             hoverEnabled: true
                             onClicked: {
-                                modelData.exec();
+                                modelData.execute();
                                 root.requestClose();
                                 root.searchText = "";
                             }

@@ -15,9 +15,9 @@ Item {
         loading = true;
         // Improved shell command to find and parse desktop files
         var cmd = "find /usr/share/applications -name '*.desktop' -maxdepth 1 | xargs grep -hE '^(Name|Exec|Icon)=' | awk -F= '{ if($1==\"Name\") name=$2; else if($1==\"Exec\") exec=$2; else if($1==\"Icon\") { icon=$2; print name\"|\"exec\"|\"icon; name=\"\"; exec=\"\"; icon=\"\" } }' | sort -u";
-        
+
         var proc = Qt.createQmlObject('import Quickshell.Io; Process { command: ["sh", "-c", "' + cmd + '"] }', root);
-        proc.onExited.connect(function() {
+        proc.onExited.connect(function () {
             var lines = proc.stdout.trim().split("\n");
             var apps = [];
             for (var i = 0; i < lines.length; i++) {

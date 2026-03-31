@@ -43,8 +43,6 @@ PanelWindow {
 
     AppsPanel {
         id: appsPanel
-        width: 300
-        height: 500
         screen: mainBar.screen
         appsService: mainBar.appsService
         isOpen: activePanel === "apps"

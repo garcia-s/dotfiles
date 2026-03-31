@@ -1,4 +1,5 @@
 import Quickshell
+import Quickshell.Hyprland
 import Quickshell.Io
 import QtQuick
 import QtQuick.Layouts
@@ -80,8 +81,8 @@ Item {
         }
         isOpen: root.isOpen
         screen: root.screen
-        width: 450
-        height: root.screen ? root.screen.height * 0.6 : 600
+        width: 800
+        height: 800
         focusable: true
 
         ColumnLayout {
@@ -141,6 +142,11 @@ Item {
                                 selectedIndex = Math.max(0, selectedIndex - 1);
                                 event.accepted = true;
                             }
+                        }
+                        HyprlandFocusGrab {
+                            id: grab
+                            windows: [root.Window.window]
+                            active:root.isOpen
                         }
 
                         Text {

@@ -6,12 +6,12 @@ import QtQuick.Layouts
 PanelWindow {
     id: root
     property bool isOpen: false
-    property bool focusable: false
     property var radius: 40
     default property alias content: container.data
     color: "transparent"
     visible: root.isOpen
-    exclusiveZone: 0
+    exclusiveZone: -10000000
+    focusable: true
 
     anchors {
         left: true

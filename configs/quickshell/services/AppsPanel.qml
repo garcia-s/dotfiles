@@ -4,12 +4,30 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 import "../components"
+import "../modules"
 
 Item {
     id: root
-    property bool isOpen: false
-    property var screen: null
-    signal requestClose
+    property BarState state
+
+    anchors {
+        top: parent.top
+        left: parent.left
+        leftMargin: 40
+        topMargin: 80
+    }
+
+    clip: true
+    height: 700
+
+    width: state.activePanel === "apps" ? 700 : 0
+
+    Behavior on width {
+        NumberAnimation {
+            duration: 200
+            easing.type: Easing.OutCubic
+        }
+    }
 
     property string searchText: ""
     property int selectedIndex: 0
@@ -25,31 +43,25 @@ Item {
     }
 
     onSearchTextChanged: selectedIndex = 0
-
-    onIsOpenChanged: {
-        if (isOpen) {
-            focusTimer.start();
+    Connections {
+        target: root.state
+        function onActivePanelChanged() {
+            if (root.state.activePanel === "apps") {
+                Qt.callLater(() => searchInput.forceActiveFocus());
+            } else {
+                root.searchText = "";
+                selectedIndex = 0;
+            }
         }
     }
-    Timer {
-        id: focusTimer
-        interval: 50
-        onTriggered: searchInput.forceActiveFocus()
-    }
 
-    RoundedPanel {
-        id: panel
-        screen: root.screen
-        isOpen: root.isOpen
-        margins.top: 80
-        width: 500
-        height: root.screen ? root.screen.height * 0.6 : 600
-        focusable: true
+    Panel {
+        radius: 60
 
         ColumnLayout {
             anchors.fill: parent
             anchors.margins: 30
-            spacing: 2
+            spacing: 5
 
             // Search Box
             Rectangle {
@@ -86,11 +98,11 @@ Item {
                                 if (filteredApps.length > selectedIndex) {
                                     filteredApps[selectedIndex].execute();
                                 }
-                                root.requestClose();
+                                root.state.toggle("apps");
                                 searchText = "";
                                 event.accepted = true;
                             } else if (event.key === Qt.Key_Escape) {
-                                root.requestClose();
+                                root.state.toggle("apps");
                                 event.accepted = true;
                             } else if (event.key === Qt.Key_Down) {
                                 selectedIndex = Math.min(filteredApps.length - 1, selectedIndex + 4);
@@ -162,7 +174,7 @@ Item {
                             hoverEnabled: true
                             onClicked: {
                                 modelData.execute();
-                                root.requestClose();
+                                root.state.toggle("");
                                 root.searchText = "";
                             }
                         }

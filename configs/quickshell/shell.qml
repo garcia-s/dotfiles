@@ -5,14 +5,10 @@ import Quickshell.Wayland
 import Quickshell.Io
 import QtQuick
 import "services"
+import "modules"
 
 ShellRoot {
     id: shell
-    property var bars: ({})
-
-    function getCurrentPanel() {
-        return shell.bars[Hyprland.focusedMonitor?.name ?? ""];
-    }
 
     FontLoader {
         id: materialIcons
@@ -23,39 +19,30 @@ ShellRoot {
         model: Quickshell.screens
         delegate: Bar {
             id: bar
-            property var modelData
-            screen: modelData
-
-            Component.onCompleted: {
-                let p = Object.assign({}, shell.bars);
-                p[modelData.name] = bar;
-                shell.bars = p;
-            }
-
-            Component.onDestruction: {
-                let p = Object.assign({}, shell.bars);
-                delete p[modelData.name];
-                shell.bars = p;
-            }
         }
     }
 
     IpcHandler {
         target: "panels"
         function toggle(type: string): void {
-            const panel = shell.getCurrentPanel();
-            if (panel)
-                panel.togglePanel(type);
+            const state = Visibilities.getForScreen(Hyprland.focusedMonitor?.name ?? "");
+            if (state)
+                state.toggle(type);
         }
     }
 
     IpcHandler {
         target: "audio"
-        function increaseVolume(): void {
+        function increment(): void {
             const panel = shell.getCurrentPanel();
             if (panel)
-            panel.togglePanel("sound");
-           
+                panel.togglePanel("sound");
+        }
+
+        function decrement(): void {
+            const state = Visibilities.getForScreen(Hyprland.focusedMonitor?.name ?? "");
+            if (state) state.toggle(type);
+            {}
         }
     }
 }

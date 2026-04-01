@@ -5,14 +5,33 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell.Bluetooth
 import "../components"
+import "../modules"
+import "../services"
 
 Item {
-    id: root
-    property bool isOpen: false
-    property var screen: null
+    property BarState state
 
     PwObjectTracker {
         objects: [Pipewire.defaultAudioSink, Pipewire.defaultAudioSource]
+    }
+
+    anchors {
+        top: parent.top
+        left: parent.left
+        leftMargin: 40
+        topMargin: 80
+    }
+
+    clip: true
+    height: 180
+
+    width: state.activePanel === "sound" ? 260 : 0
+
+    Behavior on width {
+        NumberAnimation {
+            duration: 300
+            easing.type: Easing.OutCubic
+        }
     }
 
     component CustomSlider: Rectangle {
@@ -46,14 +65,9 @@ Item {
         }
     }
 
-    RoundedPanel {
-        id: panel
-        screen: root.screen
-        isOpen: root.isOpen
-        margins.top: 140
-        width: 300
-        height: 200
+    Panel {
 
+        radius: 20
         ColumnLayout {
             anchors.fill: parent
             anchors.margins: 30

@@ -7,11 +7,7 @@ shopt -s histappend
 HISTSIZE=1000
 HISTFILESIZE=2000
 
-# check the window size after each command and, if necessary,
-# update the values of LINES and COLUMNS.
 shopt -s checkwinsize
-
-# make less more friendly for non-text input files, see lesspipe(1)
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
 
@@ -72,13 +68,12 @@ export TERM=xterm-256color
 export CLICOLOR=1
 
 #FLUTTER STUFF
-#FLUTTER PATH MIGHT BE USEFUL
 export FLUTTER_PATH=$HOME/dev/flutter/bin
 export CHROME_EXECUTABLE=/var/lib/flatpak/app/com.google.Chrome/x86_64/stable/active/export/bin/com.google.Chrome
 export PATH=$PATH:$FLUTTER_PATH
 
 # ANDROID STUDIO STUFF
-export ANDROID_HOME=$HOME/android_sdk #ANDROID HOME
+export ANDROID_HOME=$HOME/Android/Sdk #ANDROID HOME
 export PATH=$PATH:$ANDROID_HOME/emulator #EMULATOR 
 export PATH=$PATH:$ANDROID_HOME/platform-tools 
 export PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin 
@@ -113,31 +108,23 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  
 
-#PHP Composer global binaries
-export PATH=$PATH:~/.composer/vendor/bin
-export PATH=$PATH:~/.composer/vendor/php-stubs
-
-#CLANG STUFF
-
-
-#HEADLESS CHROMIUM 
-export PATH=$PATH:/usr/lib64/chromium-browser/
-
-#LIGHTHOUSE
-export CHROME_PATH=/usr/lib64/chromium-browser/headless_shell
-
-#DIRECTORIES FOR MY PROJECTS
-export PROJECT_DIRS="$HOME/git:/var/www/html/wp-content/themes:$HOME"
-
-#CHROMIUM DEPOT TOOLS
-export PATH=$PATH:$HOME/dev/depot_tools
-
 export FLEX_HOME=$HOME/dev/apache-flex
 export PATH=$PATH:$FLEX_HOME/bin
 
 ### Claudio
 export PATH=$HOME/.local/bin:$PATH
+
 ### Weird askpass for ssh
 export SSH_ASKPASS_REQUIRE=never
-### Kitty fix
+
+### MONADO
+
+export XRT_COMPOSITOR_FORCE_XCB=1
+export MONADO_FAKE_HMD=1
+export MONADO_DRIVER=dummy
+export QWERTY_ENABLE=1
+export XRT_DEBUG_GUI=1
+
+export XR_RUNTIME_JSON="/home/symmetry/.local/share/envision/prefixes/simulated_default/share/openxr/1/openxr_monado.json"
+export PATH=$PATH:"$HOME/.local/share/envision/prefixes/simulated_default/bin"
 

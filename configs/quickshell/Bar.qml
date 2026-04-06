@@ -112,7 +112,7 @@ Scope {
         }
 
         SoundPanel {
-            id: panelsContainer
+            id: soundPanel 
             state: root.state
         }
         AppsPanel {

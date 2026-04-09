@@ -46,9 +46,7 @@ Scope {
         id: panelsWindow
         exclusionMode: ExclusionMode.Ignore
         screen: root.modelData
-        WlrLayershell.keyboardFocus: ShellState.getActivePanel(root.modelData.name) !== ""
-            ? WlrKeyboardFocus.Exclusive
-            : WlrKeyboardFocus.None
+        WlrLayershell.keyboardFocus: ShellState.getActivePanel(root.modelData.name) !== "" ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
         color: "transparent"
         anchors {
             top: true
@@ -64,6 +62,10 @@ Scope {
             Region {
                 item: appsPanel
             }
+            Region {
+                item: calendarPanel
+            }
+
             Region {
                 item: powerPanel
             }
@@ -93,6 +95,10 @@ Scope {
         }
         PowerPanel {
             id: powerPanel
+            screen: root.modelData
+        }
+        CalendarPanel {
+            id: calendarPanel
             screen: root.modelData
         }
     }
@@ -168,6 +174,7 @@ Scope {
                 }
                 Clock {
                     Layout.alignment: Qt.AlignHCenter
+                    onClicked: ShellState.togglePanel("calendar")
                 }
             }
         }

@@ -118,63 +118,85 @@ Scope {
 
         Rectangle {
             anchors.verticalCenter: parent.verticalCenter
-            height: parent.height - 100
-            width: 40
-            color: "#1a1b26"
-            topRightRadius: 20
-            bottomRightRadius: 20
+            height: parent.height - 60
+            color: "transparent"
 
-            ColumnLayout {
-                id: buttons
-                anchors.fill: parent
-                anchors.horizontalCenter: parent.horizontalCenter
-                anchors.topMargin: 20
-                anchors.bottomMargin: 20
-                spacing: 20
-                width: parent.width
+            InvertedCorner {
+                location: 3
+                radius: 25
+                color: "#1a1b26"
+                anchors.bottom: parent.top
+                anchors.left: parent.left
+            }
 
-                Button {
-                    id: appsButton
-                    icon: "\ue5c3"
-                    Layout.alignment: Qt.AlignHCenter
-                    onClicked: ShellState.togglePanel("apps")
-                }
-                Button {
-                    icon: "\ue8ac"
-                    Layout.alignment: Qt.AlignHCenter
-                    onClicked: ShellState.togglePanel("power")
-                }
-                Workspaces {}
+            InvertedCorner {
+                location: 1
+                radius: 25
+                color: "#1a1b26"
+                anchors.top: parent.bottom
+                anchors.left: parent.left
+            }
 
-                Rectangle {
-                    width: 28
-                    height: 80
-                    color: "#111"
-                    radius: 20
-                    Layout.alignment: Qt.AlignHCenter
-                    ColumnLayout {
-                        anchors.fill: parent
-                        RoundedButton {
-                            icon: "\ue04d"
-                            Layout.alignment: Qt.AlignHCenter
-                            onClicked: ShellState.togglePanel("sound")
-                        }
-                        RoundedButton {
-                            icon: "\ue1a7"
-                            Layout.alignment: Qt.AlignHCenter
+            Rectangle {
+                anchors.verticalCenter: parent.verticalCenter
+                height: parent.height
+                width: 40
+                color: "#1a1b26"
+                topRightRadius: 25
+                bottomRightRadius: 25
+
+                ColumnLayout {
+                    id: buttons
+                    anchors.fill: parent
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.topMargin: 20
+                    anchors.bottomMargin: 20
+                    spacing: 20
+                    width: parent.width
+
+                    Button {
+                        id: appsButton
+                        icon: "\ue5c3"
+                        Layout.alignment: Qt.AlignHCenter
+                        onClicked: ShellState.togglePanel("apps")
+                    }
+                    Button {
+                        icon: "\ue8ac"
+                        Layout.alignment: Qt.AlignHCenter
+                        onClicked: ShellState.togglePanel("power")
+                    }
+                    Workspaces {}
+
+                    Rectangle {
+                        width: 28
+                        height: 80
+                        color: "#111"
+                        radius: 20
+                        Layout.alignment: Qt.AlignHCenter
+                        ColumnLayout {
+                            anchors.fill: parent
+                            RoundedButton {
+                                icon: "\ue04d"
+                                Layout.alignment: Qt.AlignHCenter
+                                onClicked: ShellState.togglePanel("sound")
+                            }
+                            RoundedButton {
+                                icon: "\ue1a7"
+                                Layout.alignment: Qt.AlignHCenter
+                            }
                         }
                     }
-                }
 
-                Item {
-                    Layout.fillHeight: true
-                }
-                Tray {
-                    Layout.alignment: Qt.AlignHCenter
-                }
-                Clock {
-                    Layout.alignment: Qt.AlignHCenter
-                    onClicked: ShellState.togglePanel("calendar")
+                    Item {
+                        Layout.fillHeight: true
+                    }
+                    Tray {
+                        Layout.alignment: Qt.AlignHCenter
+                    }
+                    Clock {
+                        Layout.alignment: Qt.AlignHCenter
+                        onClicked: ShellState.togglePanel("calendar")
+                    }
                 }
             }
         }

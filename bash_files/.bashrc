@@ -119,12 +119,15 @@ export SSH_ASKPASS_REQUIRE=never
 
 ### MONADO
 
+
 export XRT_COMPOSITOR_FORCE_XCB=1
-export MONADO_FAKE_HMD=1
-export MONADO_DRIVER=dummy
+#export MONADO_FAKE_HMD=1
 export QWERTY_ENABLE=1
 export XRT_DEBUG_GUI=1
 
 export XR_RUNTIME_JSON="/home/symmetry/.local/share/envision/prefixes/simulated_default/share/openxr/1/openxr_monado.json"
 export PATH=$PATH:"$HOME/.local/share/envision/prefixes/simulated_default/bin"
+
+## GODOT
+export PATH=$PATH:"$HOME/dev/godot"
 

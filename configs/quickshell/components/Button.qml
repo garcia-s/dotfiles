@@ -10,7 +10,7 @@ Rectangle {
 
     width: 30
     height: 30
-    color: active ? "#bd93f9" : "#1a1b26"
+    color: active ? "#bd93f9" : area.containsMouse ? "#2a2b36" : "#1a1b26"
     radius: 3
 
     Text {
@@ -22,7 +22,9 @@ Rectangle {
     }
 
     MouseArea {
+        id: area
         anchors.fill: parent
+        hoverEnabled: true
         onClicked: root.clicked()
     }
 }

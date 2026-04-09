@@ -61,7 +61,9 @@ Scope {
             Region {
                 item: appsPanel
             }
-
+            Region {
+                item: powerPanel
+            }
             Region {
                 item: underlay_rect
             }
@@ -84,6 +86,10 @@ Scope {
         }
         AppsPanel {
             id: appsPanel
+            screen: root.modelData
+        }
+        PowerPanel {
+            id: powerPanel
             screen: root.modelData
         }
     }
@@ -123,6 +129,11 @@ Scope {
                     icon: "\ue5c3"
                     Layout.alignment: Qt.AlignHCenter
                     onClicked: ShellState.togglePanel("apps")
+                }
+                Button {
+                    icon: "\ue8ac"
+                    Layout.alignment: Qt.AlignHCenter
+                    onClicked: ShellState.togglePanel("power")
                 }
                 Workspaces {}
 

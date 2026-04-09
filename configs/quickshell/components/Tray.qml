@@ -3,6 +3,7 @@ import Quickshell.Services.SystemTray
 import Quickshell.Wayland
 import Quickshell.Io
 import QtQuick
+import "../modules"
 
 Column {
     id: trayColumn
@@ -32,7 +33,7 @@ Column {
 
                 onClicked: mouse => {
                     if (mouse.button === Qt.RightButton) {
-                        modelData.menu.open(this);
+                        ShellState.setTrayItem(modelData);
                     } else {
                         modelData.activate();
                     }

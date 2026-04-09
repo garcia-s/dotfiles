@@ -7,6 +7,7 @@ Singleton {
     id: root
     property var exclusivePanel: string = ""
     property var screen: string = ""
+    property var trayContextItem: null
 
     function showOverlay(screenName: string): bool {
         return screen !== screenName && screen != "" && screen != undefined;
@@ -33,8 +34,15 @@ Singleton {
         exclusivePanel = panel;
     }
 
+    function setTrayItem(item) {
+        trayContextItem = item;
+        screen = Hyprland.focusedMonitor.name;
+        exclusivePanel = "tray";
+    }
+
     function closePanel() {
         screen = "";
         exclusivePanel = "";
+        trayContextItem = null;
     }
 }

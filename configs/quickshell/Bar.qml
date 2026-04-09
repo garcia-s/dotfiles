@@ -65,9 +65,11 @@ Scope {
             Region {
                 item: calendarPanel
             }
-
             Region {
                 item: powerPanel
+            }
+            Region {
+                item: trayContextPanel
             }
             Region {
                 item: underlay_rect
@@ -99,6 +101,10 @@ Scope {
         }
         CalendarPanel {
             id: calendarPanel
+            screen: root.modelData
+        }
+        TrayContextPanel {
+            id: trayContextPanel
             screen: root.modelData
         }
     }

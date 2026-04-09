@@ -15,12 +15,12 @@ Item {
         top: parent.top
         left: parent.left
         leftMargin: 40
-        topMargin: 80
+        topMargin: 50
     }
 
     clip: true
-    height: 700
-    width: ShellState.getActivePanel(screen.name) === "apps" ? 700 : 0
+    height: 600
+    width: ShellState.getActivePanel(screen.name) === "apps" ? 600 : 0
 
     Behavior on width {
         NumberAnimation {
@@ -55,7 +55,7 @@ Item {
     }
 
     Panel {
-        radius: 60
+        radius: 30
 
         ColumnLayout {
             anchors.fill: parent

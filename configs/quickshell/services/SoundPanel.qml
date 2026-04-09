@@ -19,7 +19,7 @@ Item {
         top: parent.top
         left: parent.left
         leftMargin: 40
-        topMargin: 80
+        topMargin: 180
     }
 
     clip: true
@@ -65,7 +65,7 @@ Item {
     }
 
     Panel {
-        radius: 20
+        radius: 30
         ColumnLayout {
             anchors.fill: parent
             anchors.margins: 30

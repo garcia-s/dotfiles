@@ -34,7 +34,7 @@ Scope {
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             width: ShellState.showOverlay(modelData.name) ? parent.width : 0
-            color: "transparent"
+            color: "#88000000"
             MouseArea {
                 anchors.fill: parent
                 onClicked: ShellState.closePanel()
@@ -81,7 +81,7 @@ Scope {
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             width: ShellState.showUnderlay(modelData.name) != "" ? parent.width : 0
-            color: "#00000000"
+            color: "#88000000"
             MouseArea {
                 anchors.fill: parent
                 onClicked: ShellState.closePanel()

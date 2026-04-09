@@ -43,9 +43,12 @@ Scope {
     }
 
     PanelWindow {
+        id: panelsWindow
         exclusionMode: ExclusionMode.Ignore
         screen: root.modelData
-        focusable: true
+        WlrLayershell.keyboardFocus: ShellState.getActivePanel(root.modelData.name) !== ""
+            ? WlrKeyboardFocus.Exclusive
+            : WlrKeyboardFocus.None
         color: "transparent"
         anchors {
             top: true

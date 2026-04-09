@@ -44,8 +44,13 @@ Item {
 
     onSearchTextChanged: selectedIndex = 0
     Connections {
-        // target: root.state
-        function onActivePanelChanged() {
+        target: ShellState
+        function onExclusivePanelChanged() {
+            if (ShellState.getActivePanel(root.screen.name) === "apps") {
+                searchInput.forceActiveFocus()
+            } else {
+                root.searchText = ""
+            }
         }
     }
 
@@ -92,11 +97,11 @@ Item {
                                 if (filteredApps.length > selectedIndex) {
                                     filteredApps[selectedIndex].execute();
                                 }
-                                //root.state.toggle("apps");
+                                ShellState.closePanel();
                                 searchText = "";
                                 event.accepted = true;
                             } else if (event.key === Qt.Key_Escape) {
-                                //root.state.toggle("apps");
+                                ShellState.closePanel();
                                 event.accepted = true;
                             } else if (event.key === Qt.Key_Down) {
                                 selectedIndex = Math.min(filteredApps.length - 1, selectedIndex + 4);
@@ -168,7 +173,7 @@ Item {
                             hoverEnabled: true
                             onClicked: {
                                 modelData.execute();
-                                //root.state.toggle("");
+                                ShellState.closePanel();
                                 root.searchText = "";
                             }
                         }

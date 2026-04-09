@@ -61,7 +61,9 @@ Scope {
             Region {
                 item: appsPanel
             }
-
+            Region {
+                item: calendarPanel
+            }
             Region {
                 item: underlay_rect
             }
@@ -84,6 +86,10 @@ Scope {
         }
         AppsPanel {
             id: appsPanel
+            screen: root.modelData
+        }
+        CalendarPanel {
+            id: calendarPanel
             screen: root.modelData
         }
     }
@@ -154,6 +160,7 @@ Scope {
                 }
                 Clock {
                     Layout.alignment: Qt.AlignHCenter
+                    onClicked: ShellState.togglePanel("calendar")
                 }
             }
         }

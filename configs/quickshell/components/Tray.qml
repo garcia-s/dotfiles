@@ -6,7 +6,7 @@ import QtQuick
 
 Column {
     id: trayColumn
-    spacing: 12
+    spacing: 5
     Repeater {
         model: SystemTray.items
 

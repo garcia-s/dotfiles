@@ -11,10 +11,82 @@ import "modules"
 Scope {
     id: root
     property var modelData
-    property BarState state: BarState {}
 
-    Component.onCompleted: Visibilities.register(modelData.name, state)
-    Component.onDestruction: Visibilities.unregister(modelData.name)
+    PanelWindow {
+        WlrLayershell.layer: WlrLayer.Overlay
+        exclusionMode: ExclusionMode.Ignore
+        screen: root.modelData
+        color: "transparent"
+        anchors {
+            top: true
+            left: true
+            right: true
+            bottom: true
+        }
+
+        mask: Region {
+            item: overlay_rect
+        }
+
+        Rectangle {
+            id: overlay_rect
+            anchors.left: parent.left
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            width: ShellState.showOverlay(modelData.name) ? parent.width : 0
+            color: "#aa000000"
+            MouseArea {
+                anchors.fill: parent
+                onClicked: ShellState.closePanel()
+            }
+        }
+    }
+
+    PanelWindow {
+        exclusionMode: ExclusionMode.Ignore
+        screen: root.modelData
+        focusable: true
+        color: "transparent"
+        anchors {
+            top: true
+            left: true
+            right: true
+            bottom: true
+        }
+
+        mask: Region {
+            Region {
+                item: soundPanel
+            }
+            Region {
+                item: appsPanel
+            }
+
+            Region {
+                item: underlay_rect
+            }
+        }
+        Rectangle {
+            id: underlay_rect
+            anchors.left: parent.left
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            width: ShellState.showUnderlay(modelData.name) != "" ? parent.width : 0
+            color: "#aa000000"
+            MouseArea {
+                anchors.fill: parent
+                onClicked: ShellState.closePanel()
+            }
+        }
+        SoundPanel {
+            id: soundPanel
+            screen: root.modelData
+        }
+        AppsPanel {
+            id: appsPanel
+            screen: root.modelData
+        }
+    }
 
     PanelWindow {
         id: bar
@@ -50,7 +122,7 @@ Scope {
                     id: appsButton
                     icon: "\ue5c3"
                     Layout.alignment: Qt.AlignHCenter
-                    onClicked: root.state.toggle("apps")
+                    onClicked: ShellState.togglePanel("apps")
                 }
                 Workspaces {}
 
@@ -65,7 +137,7 @@ Scope {
                         RoundedButton {
                             icon: "\ue04d"
                             Layout.alignment: Qt.AlignHCenter
-                            onClicked: root.state.toggle("sound")
+                            onClicked: ShellState.togglePanel("sound")
                         }
                         RoundedButton {
                             icon: "\ue1a7"
@@ -84,40 +156,6 @@ Scope {
                     Layout.alignment: Qt.AlignHCenter
                 }
             }
-        }
-    }
-
-    PanelWindow {
-        id: panelsWindow
-        screen: root.modelData
-        exclusionMode: ExclusionMode.Ignore
-        color: "transparent"
-
-        anchors {
-            top: true
-            left: true
-            right: true
-            bottom: true
-        }
-
-        WlrLayershell.keyboardFocus: root.state.activePanel !== "" ? WlrKeyboardFocus.OnDemand : WlrKeyboardFocus.None
-
-        mask: Region {
-            item: {
-                if (state.activePanel == "sound")
-                    return soundPanel;
-                if (state.activePanel == "apps")
-                    return appsPanel;
-            }
-        }
-
-        SoundPanel {
-            id: soundPanel 
-            state: root.state
-        }
-        AppsPanel {
-            id: appsPanel
-            state: root.state
         }
     }
 }

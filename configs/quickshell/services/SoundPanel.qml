@@ -9,8 +9,8 @@ import "../modules"
 import "../services"
 
 Item {
-    property BarState state
 
+    property var screen
     PwObjectTracker {
         objects: [Pipewire.defaultAudioSink, Pipewire.defaultAudioSource]
     }
@@ -24,8 +24,7 @@ Item {
 
     clip: true
     height: 180
-
-    width: state.activePanel === "sound" ? 260 : 0
+    width: ShellState.getActivePanel(screen.name) === 'sound' ? 300 : 0
 
     Behavior on width {
         NumberAnimation {
@@ -66,7 +65,6 @@ Item {
     }
 
     Panel {
-
         radius: 20
         ColumnLayout {
             anchors.fill: parent

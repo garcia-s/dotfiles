@@ -9,7 +9,6 @@ import "modules"
 
 ShellRoot {
     id: shell
-
     FontLoader {
         id: materialIcons
         source: "fonts/MaterialIcons-Regular.ttf"
@@ -25,23 +24,20 @@ ShellRoot {
     IpcHandler {
         target: "panels"
         function toggle(type: string): void {
-            const state = Visibilities.getForScreen(Hyprland.focusedMonitor?.name ?? "");
-            if (state)
-                state.toggle(type);
+            ShellState.togglePanel(type);
         }
     }
 
     IpcHandler {
         target: "audio"
         function increment(): void {
-            const panel = shell.getCurrentPanel();
-            if (panel)
-                panel.togglePanel("sound");
+            panel.togglePanel("sound");
         }
 
         function decrement(): void {
             const state = Visibilities.getForScreen(Hyprland.focusedMonitor?.name ?? "");
-            if (state) state.toggle(type);
+            if (state)
+                state.toggle(type);
             {}
         }
     }

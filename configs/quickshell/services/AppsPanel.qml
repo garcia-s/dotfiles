@@ -8,7 +8,8 @@ import "../modules"
 
 Item {
     id: root
-    property BarState state
+
+    property var screen
 
     anchors {
         top: parent.top
@@ -19,8 +20,7 @@ Item {
 
     clip: true
     height: 700
-
-    width: state.activePanel === "apps" ? 700 : 0
+    width: ShellState.getActivePanel(screen.name) === "apps" ? 700 : 0
 
     Behavior on width {
         NumberAnimation {
@@ -44,14 +44,8 @@ Item {
 
     onSearchTextChanged: selectedIndex = 0
     Connections {
-        target: root.state
+        // target: root.state
         function onActivePanelChanged() {
-            if (root.state.activePanel === "apps") {
-                Qt.callLater(() => searchInput.forceActiveFocus());
-            } else {
-                root.searchText = "";
-                selectedIndex = 0;
-            }
         }
     }
 
@@ -98,11 +92,11 @@ Item {
                                 if (filteredApps.length > selectedIndex) {
                                     filteredApps[selectedIndex].execute();
                                 }
-                                root.state.toggle("apps");
+                                //root.state.toggle("apps");
                                 searchText = "";
                                 event.accepted = true;
                             } else if (event.key === Qt.Key_Escape) {
-                                root.state.toggle("apps");
+                                //root.state.toggle("apps");
                                 event.accepted = true;
                             } else if (event.key === Qt.Key_Down) {
                                 selectedIndex = Math.min(filteredApps.length - 1, selectedIndex + 4);
@@ -174,7 +168,7 @@ Item {
                             hoverEnabled: true
                             onClicked: {
                                 modelData.execute();
-                                root.state.toggle("");
+                                //root.state.toggle("");
                                 root.searchText = "";
                             }
                         }

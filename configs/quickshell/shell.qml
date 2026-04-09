@@ -21,6 +21,10 @@ ShellRoot {
         }
     }
 
+    NotificationsOverlay {
+        screen: Quickshell.screens[0]
+    }
+
     IpcHandler {
         target: "panels"
         function toggle(type: string): void {

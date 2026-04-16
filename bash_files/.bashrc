@@ -94,10 +94,6 @@ GONOPROXY=true
 export JAVA_HOME=$(dirname $(dirname $(readlink -f $(which java))))
 export PATH=$PATH:$JAVA_HOME/bin
 
-#GRADLE
-export GRADLE_PATH=$HOME/dev/gradle/bin
-export PATH=$PATH:$GRADLE_PATH
-
 #SPRING
 export SPRING_PATH=$HOME/dev/spring/bin
 export PATH=$PATH:$SPRING_PATH

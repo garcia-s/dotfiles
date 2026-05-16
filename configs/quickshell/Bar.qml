@@ -69,6 +69,9 @@ Scope {
                 item: powerPanel
             }
             Region {
+                item: networkPanel
+            }
+            Region {
                 item: trayContextPanel
             }
             Region {
@@ -97,6 +100,10 @@ Scope {
         }
         PowerPanel {
             id: powerPanel
+            screen: root.modelData
+        }
+        NetworkPanel {
+            id: networkPanel
             screen: root.modelData
         }
         CalendarPanel {
@@ -170,6 +177,11 @@ Scope {
                         icon: "\ue8ac"
                         Layout.alignment: Qt.AlignHCenter
                         onClicked: ShellState.togglePanel("power")
+                    }
+                    Button {
+                        icon: "\ue63e"
+                        Layout.alignment: Qt.AlignHCenter
+                        onClicked: ShellState.togglePanel("network")
                     }
                     Workspaces {}
 

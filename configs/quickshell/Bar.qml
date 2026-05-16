@@ -196,6 +196,9 @@ Scope {
                     Item {
                         Layout.fillHeight: true
                     }
+                    Battery {
+                        Layout.alignment: Qt.AlignHCenter
+                    }
                     Tray {
                         Layout.alignment: Qt.AlignHCenter
                     }

@@ -1,31 +1,4 @@
 
-monitor=eDP-1, preferred,auto,1
-monitor=DP-1, preferred,auto,1
-monitor=HDMI-A-1, prefered, auto, 1
-
-$terminal = kitty
-$fileManager = nautilus
-$screenshots = grim ${slurp}
-
-# NVIDIA STUFF
-env = ELECTRON_OZONE_PLATFORM_HINT,auto
-env = XDG_SESSION_TYPE,wayland
-
-env = LIBVA_DRIVER_NAME,nvidia
-env = GBM_BACKEND,nvidia-drm
-env = __GLX_VENDOR_LIBRARY_NAME,nvidia
-env = WRL_NO_HARDWARE_CURSOR,1
-
-# MONADO STUF
-
-#Normal mouse stuff
-env = XCURSOR_SIZE,24
-
-#WALLPEPA
-exec-once = hypridle
-exec-once = hyprpaper 
-exec-once = quickshell
-exec-once = hyprctl setcursor default 22
 
 input {
     kb_layout=us
@@ -70,14 +43,6 @@ animations {
     animation = workspaces, 1, 6, default
 }
 
-dwindle {
-    pseudotile = yes
-    preserve_split = yes 
-}
-
-misc {
-    force_default_wallpaper = -1 
-}
 
 device {
     name=wacom-one-by-wacom-s-pen
@@ -86,24 +51,16 @@ device {
 }
 
 windowrulev2 = float,class:xdg-desktop-portal-gtk
-windowrulev2 = noshadow, on, class:.* 
-windowrulev2 = opacity 1 0.97,  class:.* 
-windowrulev2 = float,class:^(org.pulseaudio.pavucontrol)$
-windowrulev2 = size 800 800,class:^(org.pulseaudio.pavucontrol)$
-windowrulev2 = center 1,class:^(org.pulseaudio.pavucontrol)$
+#windowrulev2 = noshadow, on, class:.* 
+#windowrulev2 = opacity 1 0.97,  class:.* 
+#windowrulev2 = float,class:^(org.pulseaudio.pavucontrol)$
+#windowrulev2 = size 800 800,class:^(org.pulseaudio.pavucontrol)$
+#windowrulev2 = center 1,class:^(org.pulseaudio.pavucontrol)$
 
 $mainMod = SUPER
 
 #Quickshell binds
 $qs = qs ipc call
-
-bindl=,switch:on:Lid Switch, exec, hyprlock & systemctl suspend
-
-bind = $mainMod, R,        exec, $qs panels toggle "apps"
-bind = $mainMod SHIFT, X,  exec, $qs togglePowerMenu toggle
-bind = $mainMod, semicolon, exec, $qs toggleCalendar toggle
-bind = $mainMod SHIFT, C,  exec, $qs toggleCpuDetails toggle
-bind = $mainMod SHIFT, M,  exec, $qs toggleRamDetails toggle
 
 bind = , XF86AudioMute, exec, pactl set-sink-mute @DEFAULT_SINK@ toggle
 bind = , XF86AudioLowerVolume, exec, pactl set-sink-volume @DEFAULT_SINK@ -1000
@@ -130,7 +87,7 @@ bind = $mainMod SHIFT, h, movewindow, l
 bind = $mainMod SHIFT, l, movewindow, r
 bind = $mainMod SHIFT, j, movewindow, u 
 bind = $mainMod SHIFT, k, movewindow, d
-bind = $mainMod, s, togglesplit 
+#bind = $mainMod, s, togglesplit 
 
 bind = $mainMod, 1, workspace, 1
 bind = $mainMod, 2, workspace, 2

@@ -5,8 +5,8 @@ import QtQuick
 
 Singleton {
     id: root
-    property var exclusivePanel: string = ""
-    property var screen: string = ""
+    property string exclusivePanel: ""
+    property string screen: ""
     property var trayContextItem: null
 
     function showOverlay(screenName: string): bool {

@@ -69,6 +69,9 @@ Scope {
                 item: powerPanel
             }
             Region {
+                item: networkPanel
+            }
+            Region {
                 item: trayContextPanel
             }
             Region {
@@ -97,6 +100,10 @@ Scope {
         }
         PowerPanel {
             id: powerPanel
+            screen: root.modelData
+        }
+        NetworkPanel {
+            id: networkPanel
             screen: root.modelData
         }
         CalendarPanel {
@@ -171,6 +178,11 @@ Scope {
                         Layout.alignment: Qt.AlignHCenter
                         onClicked: ShellState.togglePanel("power")
                     }
+                    Button {
+                        icon: "\ue63e"
+                        Layout.alignment: Qt.AlignHCenter
+                        onClicked: ShellState.togglePanel("network")
+                    }
                     Workspaces {}
 
                     Rectangle {
@@ -195,6 +207,9 @@ Scope {
 
                     Item {
                         Layout.fillHeight: true
+                    }
+                    Battery {
+                        Layout.alignment: Qt.AlignHCenter
                     }
                     Tray {
                         Layout.alignment: Qt.AlignHCenter

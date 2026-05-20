@@ -18,14 +18,20 @@ hl.bind(mainMod .. " + Q", hl.dsp.window.close())
 hl.bind(mainMod .. " + K", hl.dsp.exec_cmd("loginctl lock-session"))
 
 
---- Shit got interesting
---- TODO: Find a way to make that pinned fullscreen functionality you used to love
-hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen_state({ internal = 1, client = 1 }))
-hl.bind(mainMod .. " + SHIFT + F", hl.dsp.window.fullscreen(0))
-hl.bind(mainMod .. " + P", hl.dsp.window.pin())
+
+hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen({ mode = 1 }))
+hl.bind(mainMod .. " + SHIFT + F", hl.dsp.window.fullscreen())
+hl.bind(mainMod .. " + p", function()
+    local win = hl.dsp.window
+    hl.dispatch(win.float())
+    hl.dispatch(win.move({ x = -100, y = -100, relative = true }))
+    hl.dispatch(win.resize({ x = 720, y = 420, }))
+    hl.dispatch(win.fullscreen_state({ internal = 0, client = 3 }))
+    hl.dispatch(win.pin())
+end)
+
 hl.bind(mainMod .. " + V", hl.dsp.window.float({ action = "toggle" }))
 hl.bind(mainMod .. " + W", hl.dsp.exec_cmd("pkill -x quickshell || quickshell"))
-
 hl.bind(mainMod .. " + h", hl.dsp.focus({ direction = "left" }))
 hl.bind(mainMod .. " + l", hl.dsp.focus({ direction = "right" }))
 hl.bind(mainMod .. " + j", hl.dsp.focus({ direction = "up" }))
@@ -41,7 +47,7 @@ for i = 1, 6 do
     hl.bind(mainMod .. " + SHIFT + " .. i, hl.dsp.window.move({ workspace = i }))
 end
 
-hl.bind("switch:on:Lid Switch", hl.dsp.exec_cmd("hyprlock & systemctl suspend"), { locked = true })
 
 hl.bind(mainMod .. " + mouse:272", hl.dsp.window.drag())
+hl.bind(mainMod .. " + mouse:273", hl.dsp.window.resize(), { mouse = true })
 hl.bind(mainMod .. " + mouse:273", hl.dsp.window.resize(), { mouse = true })

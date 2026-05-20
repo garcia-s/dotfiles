@@ -38,5 +38,14 @@ for file in $bash_files; do
     ln -s "$file" "$HOME"
 done
 
+echo "Montando directorio de wallpapers... espere"
+SHARE_FOLDER="$HOME/.local/share"
+wallpapers="$SHARE_FOLDER/wallpapers" 
+
+if [ -f "$wallpapers" ]; then
+    unlink "$wallpapers"
+    rm -f "$wallpapers"
+fi
+ln -s "$SCRIPT_DIR/wallpapers" "$SHARE_FOLDER"
 echo "Listo, disfrute de los bugs"
 

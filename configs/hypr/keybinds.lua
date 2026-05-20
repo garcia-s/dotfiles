@@ -32,17 +32,26 @@ end)
 
 hl.bind(mainMod .. " + V", hl.dsp.window.float({ action = "toggle" }))
 hl.bind(mainMod .. " + W", hl.dsp.exec_cmd("pkill -x quickshell || quickshell"))
+hl.bind(mainMod .. " + SHIFT + s", hl.dsp.submap("resize"))
+
+hl.define_submap("resize", function()
+    hl.bind("l", hl.dsp.window.resize({ x = 10, y = 0, relative = true }), { repeating = true })
+    hl.bind("h", hl.dsp.window.resize({ x = -10, y = 0, relative = true }), { repeating = true })
+    hl.bind("escape", hl.dsp.submap("reset"))
+end)
+
 hl.bind(mainMod .. " + h", hl.dsp.focus({ direction = "left" }))
 hl.bind(mainMod .. " + l", hl.dsp.focus({ direction = "right" }))
 hl.bind(mainMod .. " + j", hl.dsp.focus({ direction = "up" }))
 hl.bind(mainMod .. " + k", hl.dsp.focus({ direction = "down" }))
+
 hl.bind(mainMod .. " + SHIFT + h", hl.dsp.window.move({ direction = "l" }))
 hl.bind(mainMod .. " + SHIFT + l", hl.dsp.window.move({ direction = "r" }))
 hl.bind(mainMod .. " + SHIFT + j", hl.dsp.window.move({ direction = "u" }))
 hl.bind(mainMod .. " + SHIFT + k", hl.dsp.window.move({ direction = "d" }))
 
 -- Workspaces
-for i = 1, 6 do
+for i = 1, 9 do
     hl.bind(mainMod .. " + " .. i, hl.dsp.focus({ workspace = i }))
     hl.bind(mainMod .. " + SHIFT + " .. i, hl.dsp.window.move({ workspace = i }))
 end

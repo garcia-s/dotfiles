@@ -1,4 +1,3 @@
-
 hl.config({
     input = {
         kb_layout = "us",
@@ -18,8 +17,8 @@ hl.config({
         gaps_in = 5,
         gaps_out = 8,
         border_size = 3,
-        layout = "dwindle",
-        allow_tearing = false,
+        layout = "master",
+        allow_tearing = true,
         col = {
             active_border = {
                 colors = { "rgba(33ccffee)", "rgba(00ff99ee)" },
@@ -28,17 +27,10 @@ hl.config({
             inactive_border = "rgba(595959aa)"
         }
     },
-
     decoration = {
-        rounding = 6,
+        rounding = 10,
     },
-    animations = {
-        enabled = true
-    },
-    dwindle = {
-        preserve_split = true
-    },
-    misc = {
-        force_default_wallpaper = -1
+    master = {
+        new_status = "slave"
     }
 })

@@ -127,3 +127,7 @@ export PATH=$PATH:"$HOME/.local/share/envision/prefixes/simulated_default/bin"
 ## GODOT
 export PATH=$PATH:"$HOME/dev/godot"
 
+
+
+# Added by Antigravity CLI installer
+export PATH="/home/symmetry/.local/bin:$PATH"

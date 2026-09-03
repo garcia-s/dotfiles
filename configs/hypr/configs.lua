@@ -1,4 +1,7 @@
 hl.config({
+    cursor = {
+        no_hardware_cursors = true
+    },
     input = {
         kb_layout = "us",
         kb_variant = "altgr-intl",
@@ -32,5 +35,5 @@ hl.config({
     },
     master = {
         new_status = "slave"
-    }
+    },
 })

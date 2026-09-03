@@ -32,6 +32,7 @@ end)
 
 hl.bind(mainMod .. " + V", hl.dsp.window.float({ action = "toggle" }))
 hl.bind(mainMod .. " + W", hl.dsp.exec_cmd("pkill -x quickshell || quickshell"))
+hl.bind(mainMod .. " + E", hl.dsp.exec_cmd("pkill -x hyprpaper || hyprpaper"))
 hl.bind(mainMod .. " + SHIFT + s", hl.dsp.submap("resize"))
 
 hl.define_submap("resize", function()
